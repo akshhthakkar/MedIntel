@@ -9,7 +9,7 @@ import { reportsAPI } from '../services/api';
 import toast from 'react-hot-toast';
 
 const languages = [
-  'English', 'Spanish', 'French', 'Hindi', 'Chinese', 'Arabic', 'Russian'
+  'English', 'Spanish', 'French', 'Hindi', 'Gujarati', 'Chinese', 'Arabic', 'Russian'
 ];
 
 const reportTypes = [

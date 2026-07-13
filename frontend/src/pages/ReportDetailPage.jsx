@@ -70,7 +70,7 @@ const ReportDetailPage = () => {
   const [chatHistory, setChatHistory] = useState([]);
 
   const chatBottomRef = useRef(null);
-  const languages = ['English', 'Spanish', 'French', 'Hindi', 'Chinese', 'Arabic', 'Russian'];
+  const languages = ['English', 'Spanish', 'French', 'Hindi', 'Gujarati', 'Chinese', 'Arabic', 'Russian'];
 
   useEffect(() => {
     fetchReport();
@@ -304,11 +304,11 @@ const ReportDetailPage = () => {
         </div>
       </div>
 
-      {/* Main Split Grid (Left: findings, Right: Chat Assistant) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      {/* Main Split Grid (Left: findings scrollable, Right: Chat Assistant fixed) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start lg:h-[calc(100vh-130px)] lg:overflow-hidden">
         
-        {/* Left Column - Report Analysis */}
-        <div className="lg:col-span-8 space-y-6">
+        {/* Left Column - Report Analysis (Scrollable) */}
+        <div className="lg:col-span-8 lg:h-full lg:overflow-y-auto pr-2 pb-10 scrollbar-thin space-y-6">
           {/* Header Card */}
           <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
             <div className="bg-gradient-to-r from-primary-600 via-primary-500 to-blue-600 px-6 py-8 text-white">
@@ -614,9 +614,9 @@ const ReportDetailPage = () => {
           </div>
         </div>
 
-        {/* Right Column - Sticky AI Assistant Chat */}
-        <div className="lg:col-span-4 lg:sticky lg:top-6 space-y-6">
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col h-[520px]">
+        {/* Right Column - Fixed Height AI Assistant Chat */}
+        <div className="lg:col-span-4 lg:h-full flex flex-col space-y-6 pb-10">
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col h-full lg:h-full min-h-[520px]">
             {/* Chat Widget Header */}
             <div className="bg-gray-50 px-5 py-4.5 border-b border-gray-100 flex items-center justify-between">
               <div className="flex items-center gap-2">
