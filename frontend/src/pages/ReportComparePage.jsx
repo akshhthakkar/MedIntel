@@ -185,22 +185,28 @@ export default function ReportComparePage() {
       {/* ── Report Header Cards ── */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">
         {[
-          { report: report1, date: date1, label: 'Earlier Report', gradient: 'from-blue-600 via-blue-500 to-indigo-600', num: 1 },
-          { report: report2, date: date2, label: 'Later Report', gradient: 'from-primary-700 via-primary-600 to-blue-700', num: 2 },
-        ].map(({ report, date, label, gradient, num }) => (
-          <div key={num} className={`bg-gradient-to-br ${gradient} rounded-2xl p-6 text-white shadow-lg`}>
+          {
+            report: report1, date: date1, label: 'Earlier Report', num: 1,
+            style: { background: 'linear-gradient(135deg, #2563EB 0%, #3B82F6 50%, #4F46E5 100%)' }
+          },
+          {
+            report: report2, date: date2, label: 'Later Report', num: 2,
+            style: { background: 'linear-gradient(135deg, #152E57 0%, #1A3C6E 50%, #1E40AF 100%)' }
+          },
+        ].map(({ report, date, label, num, style }) => (
+          <div key={num} className="rounded-2xl p-6 text-white shadow-lg" style={style}>
             <div className="flex items-start justify-between">
               <div>
                 <span className="text-[10px] font-bold uppercase tracking-widest text-white/60 block mb-1">{label}</span>
                 <h2 className="text-lg font-extrabold leading-snug mb-1">{report.title || `Report ${num}`}</h2>
                 <p className="text-sm text-white/70">{date}</p>
               </div>
-              <div className="h-10 w-10 rounded-xl bg-white/20 flex items-center justify-center flex-shrink-0">
+              <div className="h-10 w-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(255,255,255,0.2)' }}>
                 <span className="text-lg font-black text-white">R{num}</span>
               </div>
             </div>
             {report.reportType && (
-              <span className="mt-3 inline-flex items-center text-[10px] font-bold uppercase tracking-wider bg-white/20 text-white px-2.5 py-1 rounded-full">
+              <span className="mt-3 inline-flex items-center text-[10px] font-bold uppercase tracking-wider text-white px-2.5 py-1 rounded-full" style={{ background: 'rgba(255,255,255,0.2)' }}>
                 {report.reportType.replace(/_/g, ' ')}
               </span>
             )}
