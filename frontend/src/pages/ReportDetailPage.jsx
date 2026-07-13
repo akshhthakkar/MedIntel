@@ -93,15 +93,19 @@ const ReportDetailPage = () => {
   const [chatHistory, setChatHistory] = useState([]);
 
   const chatBottomRef = useRef(null);
+  const chatContainerRef = useRef(null);
   const languages = ['English', 'Spanish', 'French', 'Hindi', 'Gujarati', 'Chinese', 'Arabic', 'Russian'];
 
   useEffect(() => {
     fetchReport();
   }, [id]);
 
+  // Scroll ONLY the chat container, not the whole page
   useEffect(() => {
-    chatBottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [chatHistory]);
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  }, [chatHistory, answerLoading]);
 
   const fetchReport = async () => {
     try {
@@ -704,6 +708,7 @@ const ReportDetailPage = () => {
 
             {/* Chat Body — scrollable */}
             <div
+              ref={chatContainerRef}
               className="flex-1 overflow-y-auto px-4 py-4 space-y-3 custom-chat-body"
               style={{ background: '#f0f4ff', minHeight: 0 }}
             >
