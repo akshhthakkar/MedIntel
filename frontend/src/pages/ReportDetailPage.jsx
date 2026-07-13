@@ -320,8 +320,7 @@ const ReportDetailPage = () => {
                 <span className="text-xs font-bold bg-white/10 px-3.5 py-1.5 rounded-full backdrop-blur-md">
                   {format(new Date(report.date || Date.now()), 'MMMM d, yyyy')}
                 </span>
-              </div>
-              <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight leading-tight">{report.title}</h1>
+              <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight leading-tight break-words">{report.title ? report.title.replace(/_/g, ' ') : ''}</h1>
             </div>
             
             <div className="p-6 sm:p-8 bg-gray-50/50 border-b border-gray-100">
@@ -362,7 +361,7 @@ const ReportDetailPage = () => {
             </h2>
 
             {/* Standard parameter cards list */}
-            {['blood_test', 'urine_test', 'other', ''].includes(report.reportType || '') && (
+            {!['imaging', 'ecg', 'prescription', 'discharge_summary'].includes(report.reportType || '') && (
               <div className="space-y-6">
                 {abnormalResults.length > 0 && (
                   <div className="space-y-4">
