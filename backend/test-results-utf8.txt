@@ -1,0 +1,999 @@
+﻿
+> medical-care-backend@1.0.0 test
+> jest --detectOpenHandles --forceExit
+
+node.exe : 
+(node:14992) 
+[MONGOOSE] Warning: 
+Duplicate schema 
+index on 
+{"createdAt":1} 
+found. This is often 
+due to declaring an 
+index using both 
+"index: true" and 
+"schema.index()". 
+Please remove the 
+duplicate index 
+definition.
+At line:1 char:1
++ & "C:\Program Files
+\nodejs/node.exe" "C:
+\Users\Aksh\AppData\R
+oaming\n ...
++ ~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~
+    + CategoryInfo   
+           : NotSpe  
+  cified: ((node:1   
+ 4992) [M...dex d    
+efinition.:Strin    
+g) [], RemoteExc    
+eption
+    + FullyQualified 
+   ErrorId : Native  
+  CommandError
+ 
+(Use `node 
+--trace-warnings 
+...` to show where 
+the warning was 
+created)
+  console.warn
+    SENDGRID_API_KEY not set, skipping email send to: test@example.com
+
+    [0m [90m 3 |[39m [36mconst[39m sendEmail [33m=[39m [36masync[39m (options) [33m=>[39m {
+     [90m 4 |[39m   [36mif[39m ([33m![39mprocess[33m.[39menv[33m.[39m[33mSENDGRID_API_KEY[39m) {
+    [31m[1m>[22m[39m[90m 5 |[39m     console[33m.[39mwarn([32m'SENDGRID_API_KEY not set, skipping email send to:'[39m[33m,[39m options[33m.[39memail)[33m;[39m
+     [90m   |[39m             [31m[1m^[22m[39m
+     [90m 6 |[39m     console[33m.[39mlog([32m`[EMAIL CONTENT]\nSubject: ${options.subject}\nBody:\n${options.message}`[39m)[33m;[39m
+     [90m 7 |[39m     [36mreturn[39m[33m;[39m
+     [90m 8 |[39m   }[0m
+
+      at warn (src/utils/sendEmail.js:5:13)
+      at sendEmail (src/controllers/auth.controller.js:57:13)
+
+  console.log
+    [EMAIL CONTENT]
+    Subject: Email Verification - MedIntel
+    Body:
+    You are receiving this email because you registered for MedIntel.
+    
+    Please click on the following link to verify your email address:
+    
+    http://localhost:3000/verify-email/d287e1b2ae4da75df6a15b9efea1c66d2f175d94
+
+      at log (src/utils/sendEmail.js:6:13)
+
+  console.log
+    [OneSignal] User 69b392d7f33279f188e145e9 registered (Signup)
+
+      at log (src/controllers/auth.controller.js:93:15)
+
+  console.log
+    [OneSignal] User 69b392d7f33279f188e145e9 identified (Login)
+
+      at log (src/controllers/auth.controller.js:153:15)
+
+  console.warn
+    SENDGRID_API_KEY not set, skipping email send to: mixedcase@example.com
+
+    [0m [90m 3 |[39m [36mconst[39m sendEmail [33m=[39m [36masync[39m (options) [33m=>[39m {
+     [90m 4 |[39m   [36mif[39m ([33m![39mprocess[33m.[39menv[33m.[39m[33mSENDGRID_API_KEY[39m) {
+    [31m[1m>[22m[39m[90m 5 |[39m     console[33m.[39mwarn([32m'SENDGRID_API_KEY not set, skipping email send to:'[39m[33m,[39m options[33m.[39memail)[33m;[39m
+     [90m   |[39m             [31m[1m^[22m[39m
+     [90m 6 |[39m     console[33m.[39mlog([32m`[EMAIL CONTENT]\nSubject: ${options.subject}\nBody:\n${options.message}`[39m)[33m;[39m
+     [90m 7 |[39m     [36mreturn[39m[33m;[39m
+     [90m 8 |[39m   }[0m
+
+      at warn (src/utils/sendEmail.js:5:13)
+      at sendEmail (src/controllers/auth.controller.js:57:13)
+
+  console.log
+    [EMAIL CONTENT]
+    Subject: Email Verification - MedIntel
+    Body:
+    You are receiving this email because you registered for MedIntel.
+    
+    Please click on the following link to verify your email address:
+    
+    http://localhost:3000/verify-email/b274bc5f58aa88caf119ba28667648057cac10cb
+
+      at log (src/utils/sendEmail.js:6:13)
+
+  console.log
+    [OneSignal] User 69b392d8f33279f188e145fa registered (Signup)
+
+      at log (src/controllers/auth.controller.js:93:15)
+
+  console.warn
+    SENDGRID_API_KEY not set, skipping email send to: secure@test.com
+
+    [0m [90m 3 |[39m [36mconst[39m sendEmail [33m=[39m [36masync[39m (options) [33m=>[39m {
+     [90m 4 |[39m   [36mif[39m ([33m![39mprocess[33m.[39menv[33m.[39m[33mSENDGRID_API_KEY[39m) {
+    [31m[1m>[22m[39m[90m 5 |[39m     console[33m.[39mwarn([32m'SENDGRID_API_KEY not set, skipping email send to:'[39m[33m,[39m options[33m.[39memail)[33m;[39m
+     [90m   |[39m             [31m[1m^[22m[39m
+     [90m 6 |[39m     console[33m.[39mlog([32m`[EMAIL CONTENT]\nSubject: ${options.subject}\nBody:\n${options.message}`[39m)[33m;[39m
+     [90m 7 |[39m     [36mreturn[39m[33m;[39m
+     [90m 8 |[39m   }[0m
+
+      at warn (src/utils/sendEmail.js:5:13)
+      at sendEmail (src/controllers/auth.controller.js:57:13)
+
+  console.log
+    [EMAIL CONTENT]
+    Subject: Email Verification - MedIntel
+    Body:
+    You are receiving this email because you registered for MedIntel.
+    
+    Please click on the following link to verify your email address:
+    
+    http://localhost:3000/verify-email/19867a0298034d4905efde17100aa621bb103188
+
+      at log (src/utils/sendEmail.js:6:13)
+
+  console.log
+    [OneSignal] User 69b392d8f33279f188e145ff registered (Signup)
+
+      at log (src/controllers/auth.controller.js:93:15)
+
+  console.log
+    [OneSignal] User 69b392d8f33279f188e145ff identified (Login)
+
+      at log (src/controllers/auth.controller.js:153:15)
+
+PASS 
+tests/auth.test.js
+  Auth API 
+Integration Tests
+    ΓêÜ should 
+register a new user 
+successfully (518 ms)
+    ΓêÜ should not 
+register user with 
+existing email (17 
+ms)
+    ΓêÜ should login 
+user successfully 
+(352 ms)
+    ΓêÜ should not 
+login with incorrect 
+password (346 ms)
+    ΓêÜ should 
+reject request with 
+expired JWT token 
+(19 ms)
+    ΓêÜ should 
+reject request with 
+tampered JWT token 
+(11 ms)
+    ΓêÜ should treat 
+emails as 
+case-insensitive 
+(352 ms)
+    ΓêÜ should not 
+expose passwordHash 
+in any auth response 
+(701 ms)
+
+  console.warn
+    SENDGRID_API_KEY not set, skipping email send to: sectest@example.com
+
+    [0m [90m 3 |[39m [36mconst[39m sendEmail [33m=[39m [36masync[39m (options) [33m=>[39m {
+     [90m 4 |[39m   [36mif[39m ([33m![39mprocess[33m.[39menv[33m.[39m[33mSENDGRID_API_KEY[39m) {
+    [31m[1m>[22m[39m[90m 5 |[39m     console[33m.[39mwarn([32m'SENDGRID_API_KEY not set, skipping email send to:'[39m[33m,[39m options[33m.[39memail)[33m;[39m
+     [90m   |[39m             [31m[1m^[22m[39m
+     [90m 6 |[39m     console[33m.[39mlog([32m`[EMAIL CONTENT]\nSubject: ${options.subject}\nBody:\n${options.message}`[39m)[33m;[39m
+     [90m 7 |[39m     [36mreturn[39m[33m;[39m
+     [90m 8 |[39m   }[0m
+
+      at warn (src/utils/sendEmail.js:5:13)
+      at sendEmail (src/controllers/auth.controller.js:57:13)
+
+  console.log
+    [EMAIL CONTENT]
+    Subject: Email Verification - MedIntel
+    Body:
+    You are receiving this email because you registered for MedIntel.
+    
+    Please click on the following link to verify your email address:
+    
+    http://localhost:3000/verify-email/6345b0fdaadb0c5c0488855d077cd5cfbd90b701
+
+      at log (src/utils/sendEmail.js:6:13)
+
+  console.log
+    [OneSignal] User 69b392daefe819e902b0222e registered (Signup)
+
+      at log (src/controllers/auth.controller.js:93:15)
+
+  console.warn
+    Notification failed: notificationService.sendReportReadyNotification is not a function
+
+    [0m [90m 214 |[39m       }
+     [90m 215 |[39m     } [36mcatch[39m (notifErr) {
+    [31m[1m>[22m[39m[90m 216 |[39m       console[33m.[39mwarn([32m'Notification failed:'[39m[33m,[39m notifErr[33m.[39mmessage)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 217 |[39m     }
+     [90m 218 |[39m   } [36mcatch[39m (error) {
+     [90m 219 |[39m     console[33m.[39merror([32m'Report processing error:'[39m[33m,[39m error)[33m;[39m[0m
+
+      at warn (src/controllers/reports.controller.js:216:15)
+
+  console.warn
+    Notification failed: notificationService.sendReportReadyNotification is not a function
+
+    [0m [90m 214 |[39m       }
+     [90m 215 |[39m     } [36mcatch[39m (notifErr) {
+    [31m[1m>[22m[39m[90m 216 |[39m       console[33m.[39mwarn([32m'Notification failed:'[39m[33m,[39m notifErr[33m.[39mmessage)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 217 |[39m     }
+     [90m 218 |[39m   } [36mcatch[39m (error) {
+     [90m 219 |[39m     console[33m.[39merror([32m'Report processing error:'[39m[33m,[39m error)[33m;[39m[0m
+
+      at warn (src/controllers/reports.controller.js:216:15)
+
+  console.warn
+    Notification failed: notificationService.sendReportReadyNotification is not a function
+
+    [0m [90m 214 |[39m       }
+     [90m 215 |[39m     } [36mcatch[39m (notifErr) {
+    [31m[1m>[22m[39m[90m 216 |[39m       console[33m.[39mwarn([32m'Notification failed:'[39m[33m,[39m notifErr[33m.[39mmessage)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 217 |[39m     }
+     [90m 218 |[39m   } [36mcatch[39m (error) {
+     [90m 219 |[39m     console[33m.[39merror([32m'Report processing error:'[39m[33m,[39m error)[33m;[39m[0m
+
+      at warn (src/controllers/reports.controller.js:216:15)
+
+  console.warn
+    Notification failed: notificationService.sendReportReadyNotification is not a function
+
+    [0m [90m 214 |[39m       }
+     [90m 215 |[39m     } [36mcatch[39m (notifErr) {
+    [31m[1m>[22m[39m[90m 216 |[39m       console[33m.[39mwarn([32m'Notification failed:'[39m[33m,[39m notifErr[33m.[39mmessage)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 217 |[39m     }
+     [90m 218 |[39m   } [36mcatch[39m (error) {
+     [90m 219 |[39m     console[33m.[39merror([32m'Report processing error:'[39m[33m,[39m error)[33m;[39m[0m
+
+      at warn (src/controllers/reports.controller.js:216:15)
+
+  console.warn
+    Notification failed: notificationService.sendReportReadyNotification is not a function
+
+    [0m [90m 214 |[39m       }
+     [90m 215 |[39m     } [36mcatch[39m (notifErr) {
+    [31m[1m>[22m[39m[90m 216 |[39m       console[33m.[39mwarn([32m'Notification failed:'[39m[33m,[39m notifErr[33m.[39mmessage)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 217 |[39m     }
+     [90m 218 |[39m   } [36mcatch[39m (error) {
+     [90m 219 |[39m     console[33m.[39merror([32m'Report processing error:'[39m[33m,[39m error)[33m;[39m[0m
+
+      at warn (src/controllers/reports.controller.js:216:15)
+
+  console.warn
+    Notification failed: notificationService.sendReportReadyNotification is not a function
+
+    [0m [90m 214 |[39m       }
+     [90m 215 |[39m     } [36mcatch[39m (notifErr) {
+    [31m[1m>[22m[39m[90m 216 |[39m       console[33m.[39mwarn([32m'Notification failed:'[39m[33m,[39m notifErr[33m.[39mmessage)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 217 |[39m     }
+     [90m 218 |[39m   } [36mcatch[39m (error) {
+     [90m 219 |[39m     console[33m.[39merror([32m'Report processing error:'[39m[33m,[39m error)[33m;[39m[0m
+
+      at warn (src/controllers/reports.controller.js:216:15)
+
+  console.warn
+    Notification failed: notificationService.sendReportReadyNotification is not a function
+
+    [0m [90m 214 |[39m       }
+     [90m 215 |[39m     } [36mcatch[39m (notifErr) {
+    [31m[1m>[22m[39m[90m 216 |[39m       console[33m.[39mwarn([32m'Notification failed:'[39m[33m,[39m notifErr[33m.[39mmessage)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 217 |[39m     }
+     [90m 218 |[39m   } [36mcatch[39m (error) {
+     [90m 219 |[39m     console[33m.[39merror([32m'Report processing error:'[39m[33m,[39m error)[33m;[39m[0m
+
+      at warn (src/controllers/reports.controller.js:216:15)
+
+  console.warn
+    Notification failed: notificationService.sendReportReadyNotification is not a function
+
+    [0m [90m 214 |[39m       }
+     [90m 215 |[39m     } [36mcatch[39m (notifErr) {
+    [31m[1m>[22m[39m[90m 216 |[39m       console[33m.[39mwarn([32m'Notification failed:'[39m[33m,[39m notifErr[33m.[39mmessage)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 217 |[39m     }
+     [90m 218 |[39m   } [36mcatch[39m (error) {
+     [90m 219 |[39m     console[33m.[39merror([32m'Report processing error:'[39m[33m,[39m error)[33m;[39m[0m
+
+      at warn (src/controllers/reports.controller.js:216:15)
+
+  console.warn
+    Notification failed: notificationService.sendReportReadyNotification is not a function
+
+    [0m [90m 214 |[39m       }
+     [90m 215 |[39m     } [36mcatch[39m (notifErr) {
+    [31m[1m>[22m[39m[90m 216 |[39m       console[33m.[39mwarn([32m'Notification failed:'[39m[33m,[39m notifErr[33m.[39mmessage)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 217 |[39m     }
+     [90m 218 |[39m   } [36mcatch[39m (error) {
+     [90m 219 |[39m     console[33m.[39merror([32m'Report processing error:'[39m[33m,[39m error)[33m;[39m[0m
+
+      at warn (src/controllers/reports.controller.js:216:15)
+
+  console.warn
+    Notification failed: notificationService.sendReportReadyNotification is not a function
+
+    [0m [90m 214 |[39m       }
+     [90m 215 |[39m     } [36mcatch[39m (notifErr) {
+    [31m[1m>[22m[39m[90m 216 |[39m       console[33m.[39mwarn([32m'Notification failed:'[39m[33m,[39m notifErr[33m.[39mmessage)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 217 |[39m     }
+     [90m 218 |[39m   } [36mcatch[39m (error) {
+     [90m 219 |[39m     console[33m.[39merror([32m'Report processing error:'[39m[33m,[39m error)[33m;[39m[0m
+
+      at warn (src/controllers/reports.controller.js:216:15)
+
+  console.warn
+    Notification failed: notificationService.sendReportReadyNotification is not a function
+
+    [0m [90m 214 |[39m       }
+     [90m 215 |[39m     } [36mcatch[39m (notifErr) {
+    [31m[1m>[22m[39m[90m 216 |[39m       console[33m.[39mwarn([32m'Notification failed:'[39m[33m,[39m notifErr[33m.[39mmessage)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 217 |[39m     }
+     [90m 218 |[39m   } [36mcatch[39m (error) {
+     [90m 219 |[39m     console[33m.[39merror([32m'Report processing error:'[39m[33m,[39m error)[33m;[39m[0m
+
+      at warn (src/controllers/reports.controller.js:216:15)
+
+  console.warn
+    Notification failed: notificationService.sendReportReadyNotification is not a function
+
+    [0m [90m 214 |[39m       }
+     [90m 215 |[39m     } [36mcatch[39m (notifErr) {
+    [31m[1m>[22m[39m[90m 216 |[39m       console[33m.[39mwarn([32m'Notification failed:'[39m[33m,[39m notifErr[33m.[39mmessage)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 217 |[39m     }
+     [90m 218 |[39m   } [36mcatch[39m (error) {
+     [90m 219 |[39m     console[33m.[39merror([32m'Report processing error:'[39m[33m,[39m error)[33m;[39m[0m
+
+      at warn (src/controllers/reports.controller.js:216:15)
+
+  console.warn
+    Notification failed: notificationService.sendReportReadyNotification is not a function
+
+    [0m [90m 214 |[39m       }
+     [90m 215 |[39m     } [36mcatch[39m (notifErr) {
+    [31m[1m>[22m[39m[90m 216 |[39m       console[33m.[39mwarn([32m'Notification failed:'[39m[33m,[39m notifErr[33m.[39mmessage)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 217 |[39m     }
+     [90m 218 |[39m   } [36mcatch[39m (error) {
+     [90m 219 |[39m     console[33m.[39merror([32m'Report processing error:'[39m[33m,[39m error)[33m;[39m[0m
+
+      at warn (src/controllers/reports.controller.js:216:15)
+
+  console.warn
+    Notification failed: notificationService.sendReportReadyNotification is not a function
+
+    [0m [90m 214 |[39m       }
+     [90m 215 |[39m     } [36mcatch[39m (notifErr) {
+    [31m[1m>[22m[39m[90m 216 |[39m       console[33m.[39mwarn([32m'Notification failed:'[39m[33m,[39m notifErr[33m.[39mmessage)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 217 |[39m     }
+     [90m 218 |[39m   } [36mcatch[39m (error) {
+     [90m 219 |[39m     console[33m.[39merror([32m'Report processing error:'[39m[33m,[39m error)[33m;[39m[0m
+
+      at warn (src/controllers/reports.controller.js:216:15)
+
+  console.warn
+    Notification failed: notificationService.sendReportReadyNotification is not a function
+
+    [0m [90m 214 |[39m       }
+     [90m 215 |[39m     } [36mcatch[39m (notifErr) {
+    [31m[1m>[22m[39m[90m 216 |[39m       console[33m.[39mwarn([32m'Notification failed:'[39m[33m,[39m notifErr[33m.[39mmessage)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 217 |[39m     }
+     [90m 218 |[39m   } [36mcatch[39m (error) {
+     [90m 219 |[39m     console[33m.[39merror([32m'Report processing error:'[39m[33m,[39m error)[33m;[39m[0m
+
+      at warn (src/controllers/reports.controller.js:216:15)
+
+  console.warn
+    Notification failed: notificationService.sendReportReadyNotification is not a function
+
+    [0m [90m 214 |[39m       }
+     [90m 215 |[39m     } [36mcatch[39m (notifErr) {
+    [31m[1m>[22m[39m[90m 216 |[39m       console[33m.[39mwarn([32m'Notification failed:'[39m[33m,[39m notifErr[33m.[39mmessage)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 217 |[39m     }
+     [90m 218 |[39m   } [36mcatch[39m (error) {
+     [90m 219 |[39m     console[33m.[39merror([32m'Report processing error:'[39m[33m,[39m error)[33m;[39m[0m
+
+      at warn (src/controllers/reports.controller.js:216:15)
+
+  console.warn
+    Notification failed: notificationService.sendReportReadyNotification is not a function
+
+    [0m [90m 214 |[39m       }
+     [90m 215 |[39m     } [36mcatch[39m (notifErr) {
+    [31m[1m>[22m[39m[90m 216 |[39m       console[33m.[39mwarn([32m'Notification failed:'[39m[33m,[39m notifErr[33m.[39mmessage)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 217 |[39m     }
+     [90m 218 |[39m   } [36mcatch[39m (error) {
+     [90m 219 |[39m     console[33m.[39merror([32m'Report processing error:'[39m[33m,[39m error)[33m;[39m[0m
+
+      at warn (src/controllers/reports.controller.js:216:15)
+
+  console.warn
+    Notification failed: notificationService.sendReportReadyNotification is not a function
+
+    [0m [90m 214 |[39m       }
+     [90m 215 |[39m     } [36mcatch[39m (notifErr) {
+    [31m[1m>[22m[39m[90m 216 |[39m       console[33m.[39mwarn([32m'Notification failed:'[39m[33m,[39m notifErr[33m.[39mmessage)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 217 |[39m     }
+     [90m 218 |[39m   } [36mcatch[39m (error) {
+     [90m 219 |[39m     console[33m.[39merror([32m'Report processing error:'[39m[33m,[39m error)[33m;[39m[0m
+
+      at warn (src/controllers/reports.controller.js:216:15)
+
+  console.warn
+    Notification failed: notificationService.sendReportReadyNotification is not a function
+
+    [0m [90m 214 |[39m       }
+     [90m 215 |[39m     } [36mcatch[39m (notifErr) {
+    [31m[1m>[22m[39m[90m 216 |[39m       console[33m.[39mwarn([32m'Notification failed:'[39m[33m,[39m notifErr[33m.[39mmessage)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 217 |[39m     }
+     [90m 218 |[39m   } [36mcatch[39m (error) {
+     [90m 219 |[39m     console[33m.[39merror([32m'Report processing error:'[39m[33m,[39m error)[33m;[39m[0m
+
+      at warn (src/controllers/reports.controller.js:216:15)
+
+  console.warn
+    Notification failed: notificationService.sendReportReadyNotification is not a function
+
+    [0m [90m 214 |[39m       }
+     [90m 215 |[39m     } [36mcatch[39m (notifErr) {
+    [31m[1m>[22m[39m[90m 216 |[39m       console[33m.[39mwarn([32m'Notification failed:'[39m[33m,[39m notifErr[33m.[39mmessage)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 217 |[39m     }
+     [90m 218 |[39m   } [36mcatch[39m (error) {
+     [90m 219 |[39m     console[33m.[39merror([32m'Report processing error:'[39m[33m,[39m error)[33m;[39m[0m
+
+      at warn (src/controllers/reports.controller.js:216:15)
+
+PASS tests/security.t
+est.js
+  Security & Load 
+API Integration Tests
+    ΓêÜ should 
+return 429 after 
+exceeding rate limit 
+(565 ms)
+    ΓêÜ should 
+sanitize NoSQL 
+injection in login 
+body (8 ms)
+    ΓêÜ should 
+sanitize XSS in 
+symptom notes field 
+(25 ms)
+    ΓêÜ should strip 
+passwordHash from 
+all API responses 
+(19 ms)
+    ΓêÜ should 
+reject requests with 
+missing 
+Authorization header 
+format (8 ms)
+
+(node:14992) 
+[MONGOOSE] Warning: 
+Duplicate schema 
+index on 
+{"createdAt":1} 
+found. This is often 
+due to declaring an 
+index using both 
+"index: true" and 
+"schema.index()". 
+Please remove the 
+duplicate index 
+definition.
+  console.log
+    [OneSignal] Γ£à Sent "≡ƒôï Your report is ready" to user 69b392dc1f74e024687b4cd8 ΓÇö notification id: mock-notification-id
+
+      at log (src/services/notificationService.js:81:13)
+
+PASS 
+tests/reports.test.js
+  Reports API 
+Integration Tests
+    ΓêÜ should block 
+access without a 
+token (9 ms)
+    ΓêÜ should 
+upload a medical 
+report successfully 
+(40 ms)
+    ΓêÜ should get 
+all reports for user 
+(22 ms)
+    ΓêÜ should get a 
+single report by ID 
+(14 ms)
+    ΓêÜ should get 
+report trends (14 ms)
+    ΓêÜ should 
+delete a report by 
+ID (28 ms)
+    ΓêÜ should 
+return 403 when 
+accessing another 
+user's report (364 
+ms)
+    ΓêÜ should 
+reject upload of 
+non-PDF/image file 
+types (40 ms)
+    ΓêÜ should 
+reject files 
+exceeding size limit 
+(148 ms)
+    ΓêÜ should 
+return 404 for 
+non-existent report 
+ID (25 ms)
+
+  console.warn
+    [AI] Groq not configured. Using Gemini.
+
+    [0m [90m 112 |[39m     }
+     [90m 113 |[39m   } [36melse[39m {
+    [31m[1m>[22m[39m[90m 114 |[39m     console[33m.[39mwarn([32m'[AI] Groq not configured. Using Gemini.'[39m)[33m;[39m
+     [90m     |[39m             [31m[1m^[22m[39m
+     [90m 115 |[39m   }
+     [90m 116 |[39m
+     [90m 117 |[39m   [90m// ΓöÇΓöÇ 2. FALLBACK: GEMINI ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[0m
+
+      at warn (src/services/aiService.js:114:13)
+      at Object.callAI [as analyzeReport] (src/services/aiService.js:366:25)
+      at Object.analyzeReport (tests/aiService.test.js:46:36)
+
+  console.log
+    [AI] Gemini fallback response OK (attempt 1)
+
+      at log (src/services/aiService.js:138:15)
+
+  console.warn
+    [AI] Groq not configured. Using Gemini.
+
+    [0m [90m 112 |[39m     }
+     [90m 113 |[39m   } [36melse[39m {
+    [31m[1m>[22m[39m[90m 114 |[39m     console[33m.[39mwarn([32m'[AI] Groq not configured. Using Gemini.'[39m)[33m;[39m
+     [90m     |[39m             [31m[1m^[22m[39m
+     [90m 115 |[39m   }
+     [90m 116 |[39m
+     [90m 117 |[39m   [90m// ΓöÇΓöÇ 2. FALLBACK: GEMINI ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[0m
+
+      at warn (src/services/aiService.js:114:13)
+      at Object.callAI [as analyzeReport] (src/services/aiService.js:366:25)
+      at Object.analyzeReport (tests/aiService.test.js:70:36)
+
+  console.log
+    [AI] Gemini fallback response OK (attempt 1)
+
+      at log (src/services/aiService.js:138:15)
+
+  console.error
+    [analyzeReport] JSON parse failed: No JSON object found in AI response
+
+    [0m [90m 375 |[39m       parsed [33m=[39m parseJSON(rawText)[33m;[39m
+     [90m 376 |[39m     } [36mcatch[39m (parseErr) {
+    [31m[1m>[22m[39m[90m 377 |[39m       console[33m.[39merror([32m'[analyzeReport] JSON parse failed:'[39m[33m,[39m parseErr[33m.[39mmessage)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 378 |[39m       console[33m.[39merror([32m'[analyzeReport] Raw response:'[39m[33m,[39m rawText[33m.[39msubstring([35m0[39m[33m,[39m [35m200[39m))[33m;[39m
+     [90m 379 |[39m       [36mreturn[39m getFallbackAnalysis()[33m;[39m
+     [90m 380 |[39m     }[0m
+
+      at Object.error [as analyzeReport] (src/services/aiService.js:377:15)
+      at Object.<anonymous> (tests/aiService.test.js:70:20)
+
+  console.error
+    [analyzeReport] Raw response: This is not JSON text without curly braces
+
+    [0m [90m 376 |[39m     } [36mcatch[39m (parseErr) {
+     [90m 377 |[39m       console[33m.[39merror([32m'[analyzeReport] JSON parse failed:'[39m[33m,[39m parseErr[33m.[39mmessage)[33m;[39m
+    [31m[1m>[22m[39m[90m 378 |[39m       console[33m.[39merror([32m'[analyzeReport] Raw response:'[39m[33m,[39m rawText[33m.[39msubstring([35m0[39m[33m,[39m [35m200[39m))[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 379 |[39m       [36mreturn[39m getFallbackAnalysis()[33m;[39m
+     [90m 380 |[39m     }
+     [90m 381 |[39m[0m
+
+      at Object.error [as analyzeReport] (src/services/aiService.js:378:15)
+      at Object.<anonymous> (tests/aiService.test.js:70:20)
+
+  console.warn
+    [AI] Groq not configured. Using Gemini.
+
+    [0m [90m 112 |[39m     }
+     [90m 113 |[39m   } [36melse[39m {
+    [31m[1m>[22m[39m[90m 114 |[39m     console[33m.[39mwarn([32m'[AI] Groq not configured. Using Gemini.'[39m)[33m;[39m
+     [90m     |[39m             [31m[1m^[22m[39m
+     [90m 115 |[39m   }
+     [90m 116 |[39m
+     [90m 117 |[39m   [90m// ΓöÇΓöÇ 2. FALLBACK: GEMINI ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[0m
+
+      at warn (src/services/aiService.js:114:13)
+      at Object.callAI [as extractMedicalEntities] (src/services/aiService.js:448:33)
+      at Object.extractMedicalEntities (tests/aiService.test.js:94:36)
+
+  console.log
+    [AI] Gemini fallback response OK (attempt 1)
+
+      at log (src/services/aiService.js:138:15)
+
+  console.warn
+    [AI] Groq not configured. Using Gemini.
+
+    [0m [90m 112 |[39m     }
+     [90m 113 |[39m   } [36melse[39m {
+    [31m[1m>[22m[39m[90m 114 |[39m     console[33m.[39mwarn([32m'[AI] Groq not configured. Using Gemini.'[39m)[33m;[39m
+     [90m     |[39m             [31m[1m^[22m[39m
+     [90m 115 |[39m   }
+     [90m 116 |[39m
+     [90m 117 |[39m   [90m// ΓöÇΓöÇ 2. FALLBACK: GEMINI ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[0m
+
+      at warn (src/services/aiService.js:114:13)
+      at Object.callAI [as analyzeReport] (src/services/aiService.js:366:25)
+      at Object.analyzeReport (tests/aiService.test.js:119:21)
+
+  console.log
+    [AI] Gemini fallback response OK (attempt 1)
+
+      at log (src/services/aiService.js:138:15)
+
+  console.warn
+    [AI] Groq not configured. Using Gemini.
+
+    [0m [90m 112 |[39m     }
+     [90m 113 |[39m   } [36melse[39m {
+    [31m[1m>[22m[39m[90m 114 |[39m     console[33m.[39mwarn([32m'[AI] Groq not configured. Using Gemini.'[39m)[33m;[39m
+     [90m     |[39m             [31m[1m^[22m[39m
+     [90m 115 |[39m   }
+     [90m 116 |[39m
+     [90m 117 |[39m   [90m// ΓöÇΓöÇ 2. FALLBACK: GEMINI ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[0m
+
+      at warn (src/services/aiService.js:114:13)
+      at Object.callAI [as extractMedicalEntities] (src/services/aiService.js:448:33)
+      at Object.extractMedicalEntities (tests/aiService.test.js:153:38)
+
+  console.log
+    [AI] Gemini fallback response OK (attempt 1)
+
+      at log (src/services/aiService.js:138:15)
+
+  console.warn
+    [AI] Groq not configured. Using Gemini.
+
+    [0m [90m 112 |[39m     }
+     [90m 113 |[39m   } [36melse[39m {
+    [31m[1m>[22m[39m[90m 114 |[39m     console[33m.[39mwarn([32m'[AI] Groq not configured. Using Gemini.'[39m)[33m;[39m
+     [90m     |[39m             [31m[1m^[22m[39m
+     [90m 115 |[39m   }
+     [90m 116 |[39m
+     [90m 117 |[39m   [90m// ΓöÇΓöÇ 2. FALLBACK: GEMINI ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[0m
+
+      at warn (src/services/aiService.js:114:13)
+      at Object.callAI [as extractMedicalEntities] (src/services/aiService.js:448:33)
+      at Object.extractMedicalEntities (tests/aiService.test.js:153:38)
+
+  console.log
+    [AI] Gemini fallback response OK (attempt 1)
+
+      at log (src/services/aiService.js:138:15)
+
+  console.warn
+    [AI] Groq not configured. Using Gemini.
+
+    [0m [90m 112 |[39m     }
+     [90m 113 |[39m   } [36melse[39m {
+    [31m[1m>[22m[39m[90m 114 |[39m     console[33m.[39mwarn([32m'[AI] Groq not configured. Using Gemini.'[39m)[33m;[39m
+     [90m     |[39m             [31m[1m^[22m[39m
+     [90m 115 |[39m   }
+     [90m 116 |[39m
+     [90m 117 |[39m   [90m// ΓöÇΓöÇ 2. FALLBACK: GEMINI ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[0m
+
+      at warn (src/services/aiService.js:114:13)
+      at Object.callAI [as extractMedicalEntities] (src/services/aiService.js:448:33)
+      at Object.extractMedicalEntities (tests/aiService.test.js:153:38)
+
+  console.log
+    [AI] Gemini fallback response OK (attempt 1)
+
+      at log (src/services/aiService.js:138:15)
+
+  console.warn
+    [AI] Groq not configured. Using Gemini.
+
+    [0m [90m 112 |[39m     }
+     [90m 113 |[39m   } [36melse[39m {
+    [31m[1m>[22m[39m[90m 114 |[39m     console[33m.[39mwarn([32m'[AI] Groq not configured. Using Gemini.'[39m)[33m;[39m
+     [90m     |[39m             [31m[1m^[22m[39m
+     [90m 115 |[39m   }
+     [90m 116 |[39m
+     [90m 117 |[39m   [90m// ΓöÇΓöÇ 2. FALLBACK: GEMINI ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[0m
+
+      at warn (src/services/aiService.js:114:13)
+      at Object.callAI [as extractMedicalEntities] (src/services/aiService.js:448:33)
+      at Object.extractMedicalEntities (tests/aiService.test.js:193:36)
+
+  console.log
+    [AI] Gemini fallback response OK (attempt 1)
+
+      at log (src/services/aiService.js:138:15)
+
+  console.warn
+    [AI] Groq not configured. Using Gemini.
+
+    [0m [90m 112 |[39m     }
+     [90m 113 |[39m   } [36melse[39m {
+    [31m[1m>[22m[39m[90m 114 |[39m     console[33m.[39mwarn([32m'[AI] Groq not configured. Using Gemini.'[39m)[33m;[39m
+     [90m     |[39m             [31m[1m^[22m[39m
+     [90m 115 |[39m   }
+     [90m 116 |[39m
+     [90m 117 |[39m   [90m// ΓöÇΓöÇ 2. FALLBACK: GEMINI ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[0m
+
+      at warn (src/services/aiService.js:114:13)
+      at Object.callAI [as checkDrugInteractions] (src/services/aiService.js:534:24)
+      at Object.checkDrugInteractions (tests/aiService.test.js:208:36)
+
+  console.log
+    [AI] Gemini fallback response OK (attempt 1)
+
+      at log (src/services/aiService.js:138:15)
+
+PASS tests/aiService.
+test.js
+  aiService
+    ΓêÜ should 
+analyze report and 
+return parsed JSON 
+(8 ms)
+    ΓêÜ should 
+return fallback for 
+very short text (1 
+ms)
+    ΓêÜ should 
+return fallback when 
+Gemini returns 
+non-JSON (7 ms)
+    ΓêÜ should 
+extract medical 
+entities and return 
+parsed JSON (8 ms)
+    ΓêÜ should call 
+Gemini API, not 
+OpenAI (4 ms)
+    ΓêÜ should 
+always return valid 
+NER output schema (8 
+ms)
+    ΓêÜ should 
+handle completely 
+empty/blank report 
+input (1 ms)
+    ΓêÜ should 
+handle 
+partial/incomplete 
+report text (3 ms)
+    ΓêÜ should check 
+drug interactions (4 
+ms)
+    ΓêÜ should 
+return empty array 
+for insufficient 
+medications (1 ms)
+
+PASS tests/medication
+s.test.js
+  Medications API 
+Integration Tests
+    ΓêÜ should 
+create a new 
+medication (56 ms)
+    ΓêÜ should get 
+all medications (32 
+ms)
+    ΓêÜ should log 
+adherence status (26 
+ms)
+    ΓêÜ should 
+delete a medication 
+(40 ms)
+    ΓêÜ should 
+reject invalid 
+frequency values (17 
+ms)
+    ΓêÜ should 
+trigger Novu 
+notification when 
+reminder is 
+scheduled (24 ms)
+    ΓêÜ should not 
+allow overlapping 
+active medications 
+with same name (41 
+ms)
+
+PASS tests/symptoms.t
+est.js
+  Symptoms API 
+Integration Tests
+    ΓêÜ should log a 
+new symptom entry 
+(34 ms)
+    ΓêÜ should get 
+all symptom logs (20 
+ms)
+    ΓêÜ should get 
+symptom trends (15 
+ms)
+    ΓêÜ should 
+delete a symptom log 
+(41 ms)
+
+  console.warn
+    SENDGRID_API_KEY not set, skipping email send to: cloud@example.com
+
+    [0m [90m 3 |[39m [36mconst[39m sendEmail [33m=[39m [36masync[39m (options) [33m=>[39m {
+     [90m 4 |[39m   [36mif[39m ([33m![39mprocess[33m.[39menv[33m.[39m[33mSENDGRID_API_KEY[39m) {
+    [31m[1m>[22m[39m[90m 5 |[39m     console[33m.[39mwarn([32m'SENDGRID_API_KEY not set, skipping email send to:'[39m[33m,[39m options[33m.[39memail)[33m;[39m
+     [90m   |[39m             [31m[1m^[22m[39m
+     [90m 6 |[39m     console[33m.[39mlog([32m`[EMAIL CONTENT]\nSubject: ${options.subject}\nBody:\n${options.message}`[39m)[33m;[39m
+     [90m 7 |[39m     [36mreturn[39m[33m;[39m
+     [90m 8 |[39m   }[0m
+
+      at warn (src/utils/sendEmail.js:5:13)
+      at sendEmail (src/controllers/auth.controller.js:57:13)
+
+  console.log
+    [EMAIL CONTENT]
+    Subject: Email Verification - MedIntel
+    Body:
+    You are receiving this email because you registered for MedIntel.
+    
+    Please click on the following link to verify your email address:
+    
+    http://localhost:3000/verify-email/c9f0f88c5fb2b90a6fbcb2a17fd3c387d02e541b
+
+      at log (src/utils/sendEmail.js:6:13)
+
+  console.log
+    [OneSignal] User 69b392e12eec60fc0e1d2494 registered (Signup)
+
+      at log (src/controllers/auth.controller.js:93:15)
+
+  console.warn
+    Notification failed: notificationService.sendReportReadyNotification is not a function
+
+    [0m [90m 214 |[39m       }
+     [90m 215 |[39m     } [36mcatch[39m (notifErr) {
+    [31m[1m>[22m[39m[90m 216 |[39m       console[33m.[39mwarn([32m'Notification failed:'[39m[33m,[39m notifErr[33m.[39mmessage)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 217 |[39m     }
+     [90m 218 |[39m   } [36mcatch[39m (error) {
+     [90m 219 |[39m     console[33m.[39merror([32m'Report processing error:'[39m[33m,[39m error)[33m;[39m[0m
+
+      at warn (src/controllers/reports.controller.js:216:15)
+
+  console.warn
+    Notification failed: notificationService.sendReportReadyNotification is not a function
+
+    [0m [90m 214 |[39m       }
+     [90m 215 |[39m     } [36mcatch[39m (notifErr) {
+    [31m[1m>[22m[39m[90m 216 |[39m       console[33m.[39mwarn([32m'Notification failed:'[39m[33m,[39m notifErr[33m.[39mmessage)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 217 |[39m     }
+     [90m 218 |[39m   } [36mcatch[39m (error) {
+     [90m 219 |[39m     console[33m.[39merror([32m'Report processing error:'[39m[33m,[39m error)[33m;[39m[0m
+
+      at warn (src/controllers/reports.controller.js:216:15)
+
+PASS tests/cloudinary
+.test.js
+  Cloudinary API 
+Integration Tests
+    ΓêÜ should 
+upload file to 
+Cloudinary and 
+return a public URL 
+(26 ms)
+    ΓêÜ should 
+delete file from 
+Cloudinary on report 
+deletion (28 ms)
+    ΓêÜ should 
+handle Cloudinary 
+upload failure 
+gracefully (23 ms)
+
+PASS tests/timeline.t
+est.js
+  Timeline API 
+Integration Tests
+    ΓêÜ should fetch 
+chronologically 
+sorted timeline 
+events (28 ms)
+    ΓêÜ should 
+generate a dashboard 
+summary containing 
+all parts (22 ms)
+
+FAIL tests/notificati
+ons.test.js
+  ΓùÅ Test suite 
+failed to run
+
+    Cannot find 
+module '@novu/node' 
+from 'tests/notificat
+ions.test.js'
+
+    [0m [90m  5 
+|[39m
+     [90m  6 |[39m 
+[90m// Mock 
+Novu[39m
+    [31m[1m>[22m[
+39m[90m  7 |[39m je
+st[33m.[39mmock([3
+2m"@novu/node"[39m[
+33m,[39m () 
+[33m=>[39m ({
+     [90m    |[39m 
+     
+[31m[1m^[22m[39m
+     [90m  8 |[39m 
+  [33mNovu[39m[33m
+:[39m jest[33m.[39
+mfn()[33m.[39mmockI
+mplementation(() 
+[33m=>[39m ({
+     [90m  9 |[39m 
+    subscribers[33m:
+[39m {
+     [90m 10 |[39m 
+      
+identify[33m:[39m j
+est[33m.[39mfn()[3
+3m.[39mmockResolvedV
+alue([36mtrue[39m)
+[33m,[39m[0m
+
+      at Resolver._th
+rowModNotFoundError (
+node_modules/jest-res
+olve/build/index.js:8
+63:11)
+      at Object.mock 
+(tests/notifications.
+test.js:7:6)
+
+Test Suites: 1 
+failed, 8 passed, 9 
+total
+Tests:       49 
+passed, 49 total
+Snapshots:   0 total
+Time:        13.786 s
+Ran all test suites.

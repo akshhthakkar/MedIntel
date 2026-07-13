@@ -1,0 +1,14 @@
+Patient Name: John Doe
+Date: 2026-06-15
+Hospital: Metro Health Labs
+
+COMPLETE BLOOD COUNT (CBC)
+Hemoglobin: 14.2 g/dL (Normal Range: 13.5 - 17.5)
+White Blood Cells (WBC): 6.8 x10^3/uL (Normal Range: 4.5 - 11.0)
+Platelets: 250 x10^3/uL (Normal Range: 150 - 450)
+
+LIPID PANEL
+Total Cholesterol: 215 mg/dL (Normal Range: 100 - 200)
+HDL Cholesterol: 45 mg/dL (Normal Range: > 40)
+LDL Cholesterol: 135 mg/dL (Normal Range: < 100)
+Triglycerides: 175 mg/dL (Normal Range: < 150)

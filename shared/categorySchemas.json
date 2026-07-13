@@ -1,0 +1,97 @@
+{
+  "blood_test": {
+    "description": "Lab report measuring levels of chemical/biological markers in blood.",
+    "fields": [
+      { "name": "testResults", "type": "array", "itemType": "TestResult" },
+      { "name": "diagnoses", "type": "array", "itemType": "string" },
+      { "name": "observations", "type": "array", "itemType": "string" },
+      { "name": "recommendations", "type": "array", "itemType": "string" }
+    ],
+    "groups": [
+      "Complete Blood Count (CBC)",
+      "Liver Function Test (LFT)",
+      "Lipid Panel",
+      "Kidney Function Test (KFT)",
+      "Thyroid Profile",
+      "Diabetes Panel / Glycemic Control",
+      "Electrolytes & Minerals",
+      "Other Analytes"
+    ]
+  },
+  "urine_test": {
+    "description": "Urinalysis measuring chemical, physical, and microscopic properties of urine.",
+    "fields": [
+      { "name": "testResults", "type": "array", "itemType": "TestResult" },
+      { "name": "diagnoses", "type": "array", "itemType": "string" },
+      { "name": "observations", "type": "array", "itemType": "string" },
+      { "name": "recommendations", "type": "array", "itemType": "string" }
+    ],
+    "analytes": [
+      "Color",
+      "Clarity",
+      "Specific Gravity",
+      "pH",
+      "Protein",
+      "Glucose",
+      "Ketones",
+      "Bilirubin",
+      "Urobilinogen",
+      "Nitrite",
+      "Leukocyte Esterase",
+      "Blood/Hemoglobin",
+      "Red Blood Cells (RBC)",
+      "White Blood Cells (WBC)",
+      "Casts/Crystals/Bacteria"
+    ]
+  },
+  "imaging": {
+    "description": "Radiology report describing scans such as X-ray, MRI, CT scan, or Ultrasound.",
+    "fields": [
+      { "name": "bodyRegion", "type": "string", "required": true },
+      { "name": "findings", "type": "array", "itemType": "string", "required": true },
+      { "name": "impression", "type": "array", "itemType": "string", "required": true },
+      { "name": "recommendations", "type": "array", "itemType": "string" },
+      { "name": "abnormalities", "type": "array", "itemType": "string" }
+    ]
+  },
+  "ecg": {
+    "description": "Electrocardiogram measuring electrical activity and rhythm of the heart.",
+    "fields": [
+      { "name": "heartRate", "type": "string" },
+      { "name": "rhythm", "type": "string" },
+      { "name": "prInterval", "type": "string" },
+      { "name": "qrsDuration", "type": "string" },
+      { "name": "qtInterval", "type": "string" },
+      { "name": "qtcInterval", "type": "string" },
+      { "name": "findings", "type": "array", "itemType": "string" },
+      { "name": "abnormalities", "type": "array", "itemType": "string" }
+    ]
+  },
+  "prescription": {
+    "description": "Prescription order documenting medications, dosages, and dosing frequencies.",
+    "fields": [
+      { "name": "medications", "type": "array", "itemType": "PrescriptionMedication", "required": true },
+      { "name": "instructions", "type": "string" },
+      { "name": "diagnoses", "type": "array", "itemType": "string" }
+    ]
+  },
+  "discharge_summary": {
+    "description": "Clinical summary compiled upon patient discharge from hospital/clinic stay.",
+    "fields": [
+      { "name": "diagnoses", "type": "array", "itemType": "string", "required": true },
+      { "name": "procedures", "type": "array", "itemType": "string" },
+      { "name": "dischargeMedications", "type": "array", "itemType": "PrescriptionMedication" },
+      { "name": "followUpInstructions", "type": "array", "itemType": "string" },
+      { "name": "carePlan", "type": "string" }
+    ]
+  },
+  "other": {
+    "description": "Fallback schema for generic clinical files.",
+    "fields": [
+      { "name": "testResults", "type": "array", "itemType": "TestResult" },
+      { "name": "diagnoses", "type": "array", "itemType": "string" },
+      { "name": "observations", "type": "array", "itemType": "string" },
+      { "name": "recommendations", "type": "array", "itemType": "string" }
+    ]
+  }
+}

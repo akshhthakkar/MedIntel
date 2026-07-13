@@ -1,0 +1,15 @@
+Metro Imaging Diagnostic Center
+Report Date: 2026-06-20
+Exam: Chest X-ray PA and Lateral views
+
+Clinical Indication: Mild persistent cough.
+
+FINDINGS:
+Lungs: The lungs are clear. There is no focal consolidation, pleural effusion, or pneumothorax.
+Heart: Cardiomegaly is present. The cardiothoracic ratio is mildly increased, estimated at 55%. Pulmonary vasculature is normal.
+Bones: The thoracic skeleton is intact. No acute fractures are identified.
+
+IMPRESSION:
+1. No active pulmonary disease.
+2. Mild cardiomegaly.
+3. Suggest clinical correlation and comparison with prior exams if available.
