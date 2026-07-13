@@ -1,3 +1,30 @@
+// Global chunk/module load error handler to resolve stale assets after deploys
+window.addEventListener('error', (event) => {
+  const errorMsg = event.message || '';
+  const isChunkError = 
+    errorMsg.includes('Failed to fetch dynamically imported module') ||
+    errorMsg.includes('Failed to load module script') ||
+    errorMsg.includes('chunk') ||
+    (event.target && event.target.tagName === 'SCRIPT' && event.target.src && event.target.src.includes('/assets/'));
+  if (isChunkError) {
+    console.warn('Global script/chunk loading error detected, forcing reload...', event);
+    window.location.reload();
+  }
+}, true);
+
+window.addEventListener('unhandledrejection', (event) => {
+  const reason = event.reason || {};
+  const errorMsg = reason.message || String(reason);
+  const isChunkError = 
+    errorMsg.includes('Failed to fetch dynamically imported module') ||
+    errorMsg.includes('Failed to load module script') ||
+    errorMsg.includes('chunk');
+  if (isChunkError) {
+    console.warn('Global unhandled rejection (chunk load) detected, forcing reload...', event);
+    window.location.reload();
+  }
+});
+
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
