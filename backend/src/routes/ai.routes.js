@@ -191,7 +191,7 @@ RULES FOR YOUR ANSWER:
       success: true,
       data: {
         answer,
-        language: reportLanguage,
+        language: responseLanguage,
         reportId
       }
     });

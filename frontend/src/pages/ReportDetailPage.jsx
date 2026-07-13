@@ -652,19 +652,16 @@ const ReportDetailPage = () => {
               </div>
             )}
           </div>
-        </div>
-
-        {/* ── RIGHT COLUMN: AI Chatbot (fixed height, no scroll on outer) ── */}
+        </div>        {/* ── RIGHT COLUMN: AI Chatbot (themed to match project branding) ── */}
         <div className="lg:col-span-4 lg:h-full flex flex-col pb-6">
           <div
             className="flex flex-col rounded-2xl overflow-hidden border border-gray-200 shadow-xl"
             style={{ height: '100%', minHeight: '500px', background: '#f8faff' }}
           >
-
             {/* Chat Header */}
             <div
               className="flex-shrink-0 px-5 py-4 flex items-center justify-between"
-              style={{ background: 'linear-gradient(135deg, #4f46e5 0%, #6366f1 50%, #3b82f6 100%)' }}
+              style={{ background: 'linear-gradient(135deg, #152E57 0%, #1A3C6E 100%)' }}
             >
               <div className="flex items-center gap-3">
                 <div className="h-9 w-9 rounded-xl flex items-center justify-center shadow-inner" style={{ background: 'rgba(255,255,255,0.2)' }}>
@@ -672,7 +669,7 @@ const ReportDetailPage = () => {
                 </div>
                 <div>
                   <h3 className="font-extrabold text-sm text-white leading-none tracking-tight">AI Health Assistant</h3>
-                  <span className="text-[10px] text-indigo-200 mt-0.5 block font-medium">
+                  <span className="text-[10px] text-blue-200 mt-0.5 block font-medium">
                     {lang && lang !== 'English' ? 'Responding in ' + lang : 'Ask in any language'}
                   </span>
                 </div>
@@ -698,8 +695,8 @@ const ReportDetailPage = () => {
             >
               {chatHistory.length === 0 ? (
                 <div className="h-full flex flex-col items-center justify-center text-center py-8 px-4">
-                  <div className="w-14 h-14 rounded-2xl bg-white border border-indigo-100 flex items-center justify-center mb-4 shadow-sm">
-                    <MessageCircle className="h-6 w-6 text-indigo-500" />
+                  <div className="w-14 h-14 rounded-2xl bg-white border border-blue-100 flex items-center justify-center mb-4 shadow-sm">
+                    <MessageCircle className="h-6 w-6 text-primary-500" />
                   </div>
                   <h4 className="font-bold text-gray-800 text-sm mb-1">Ask me anything</h4>
                   <p className="text-xs text-gray-400 max-w-[200px] leading-relaxed">
@@ -710,7 +707,7 @@ const ReportDetailPage = () => {
                       <button
                         key={i}
                         onClick={() => setQuestion(s)}
-                        className="text-[10px] font-semibold px-2.5 py-1 bg-white border border-indigo-100 text-indigo-600 rounded-full hover:bg-indigo-50 transition-colors shadow-sm whitespace-nowrap"
+                        className="text-[10px] font-semibold px-2.5 py-1 bg-white border border-blue-100 text-primary-600 rounded-full hover:bg-blue-50/50 transition-colors shadow-sm whitespace-nowrap"
                       >
                         {s}
                       </button>
@@ -726,7 +723,7 @@ const ReportDetailPage = () => {
                     {msg.role !== 'user' && (
                       <div
                         className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm mb-0.5"
-                        style={{ background: 'linear-gradient(135deg, #6366f1, #3b82f6)' }}
+                        style={{ background: 'linear-gradient(135deg, #1A3C6E, #152E57)' }}
                       >
                         <Sparkles className="h-3.5 w-3.5 text-white" />
                       </div>
@@ -736,7 +733,7 @@ const ReportDetailPage = () => {
                         className={'px-3.5 py-2.5 rounded-2xl text-xs leading-relaxed shadow-sm ' + (msg.role === 'user'
                           ? 'text-white rounded-br-none'
                           : 'bg-white text-gray-800 rounded-bl-none border border-gray-100')}
-                        style={msg.role === 'user' ? { background: 'linear-gradient(135deg, #4f46e5, #3b82f6)' } : {}}
+                        style={msg.role === 'user' ? { background: 'linear-gradient(135deg, #1A3C6E, #152E57)' } : {}}
                       >
                         {msg.role === 'user' ? msg.content : formatMessage(msg.content)}
                       </div>
@@ -759,15 +756,15 @@ const ReportDetailPage = () => {
                 <div className="flex items-end gap-2 justify-start animate-fade-in">
                   <div
                     className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm"
-                    style={{ background: 'linear-gradient(135deg, #6366f1, #3b82f6)' }}
+                    style={{ background: 'linear-gradient(135deg, #1A3C6E, #152E57)' }}
                   >
                     <Sparkles className="h-3.5 w-3.5 text-white" />
                   </div>
                   <div className="bg-white border border-gray-100 px-4 py-3 rounded-2xl rounded-bl-none shadow-sm">
                     <div className="flex gap-1 items-center">
-                      <span className="w-1.5 h-1.5 bg-indigo-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                      <span className="w-1.5 h-1.5 bg-indigo-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                      <span className="w-1.5 h-1.5 bg-indigo-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                      <span className="w-1.5 h-1.5 bg-primary-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                      <span className="w-1.5 h-1.5 bg-primary-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                      <span className="w-1.5 h-1.5 bg-primary-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                     </div>
                   </div>
                 </div>
@@ -776,9 +773,9 @@ const ReportDetailPage = () => {
             </div>
 
             {/* Language hint */}
-            <div className="flex-shrink-0 px-4 py-1.5 bg-indigo-50 border-t border-indigo-100 flex items-center gap-1.5">
-              <Globe className="h-3 w-3 text-indigo-400 flex-shrink-0" />
-              <span className="text-[10px] text-indigo-500 font-medium">
+            <div className="flex-shrink-0 px-4 py-1.5 bg-blue-50 border-t border-blue-100 flex items-center gap-1.5">
+              <Globe className="h-3 w-3 text-primary-500 flex-shrink-0" />
+              <span className="text-[10px] text-primary-600 font-medium">
                 Type in Hindi, Gujarati or English - AI will reply in your language.
               </span>
             </div>
@@ -799,16 +796,14 @@ const ReportDetailPage = () => {
                   type="submit"
                   disabled={!question.trim() || answerLoading}
                   className="flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center transition-all disabled:opacity-40"
-                  style={{ background: question.trim() ? 'linear-gradient(135deg, #4f46e5, #3b82f6)' : '#d1d5db' }}
+                  style={{ background: question.trim() ? 'linear-gradient(135deg, #1A3C6E, #152E57)' : '#d1d5db' }}
                 >
                   <Send className="h-3.5 w-3.5 text-white" />
                 </button>
               </form>
             </div>
-
           </div>
         </div>
-
       </div>
     </div>
   );
