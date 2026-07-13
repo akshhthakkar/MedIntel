@@ -156,7 +156,7 @@ Once deployed, copy the URL of `medintel-ai` and add it to your main backend (`m
 | **Framework Preset** | `Vite` |
 | **Root Directory** | `frontend` |
 | **Build Command** | `npm run build` |
-| **Output Directory** | `build` |
+| **Output Directory** | `dist` |
 | **Install Command** | `npm install` |
 
 ### Set Environment Variables in Vercel
