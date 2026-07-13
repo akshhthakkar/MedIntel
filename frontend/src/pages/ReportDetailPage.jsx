@@ -662,7 +662,7 @@ const ReportDetailPage = () => {
                         ? 'bg-primary-600 text-white rounded-br-sm'
                         : 'bg-white text-gray-800 rounded-bl-sm border border-gray-100'}
                     `}>
-                      {msg.content}
+                      {msg.role === 'user' ? msg.content : formatMessage(msg.content)}
                     </div>
                   </div>
                 ))
@@ -848,6 +848,35 @@ const ResultCard = ({ result, theme }) => {
       )}
     </div>
   );
+};
+
+const formatMessage = (content) => {
+  if (!content) return '';
+  const lines = content.split('\n');
+  return lines.map((line, idx) => {
+    const bulletMatch = line.match(/^(\*|-|•)\s*(.*)/);
+    const parseBold = (text) => {
+      const parts = text.split(/\*\*([^*]+)\*\*/g);
+      return parts.map((part, i) => {
+        if (i % 2 === 1) return <strong key={i} className="font-extrabold text-gray-900">{part}</strong>;
+        return part;
+      });
+    };
+
+    if (bulletMatch) {
+      return (
+        <ul key={idx} className="list-disc pl-4 my-1">
+          <li className="leading-relaxed">{parseBold(bulletMatch[2])}</li>
+        </ul>
+      );
+    }
+
+    return (
+      <p key={idx} className="my-1.5 min-h-[1em] leading-relaxed">
+        {parseBold(line)}
+      </p>
+    );
+  });
 };
 
 export default ReportDetailPage;
