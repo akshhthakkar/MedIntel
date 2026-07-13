@@ -68,7 +68,7 @@ Click **"Environment"** tab and add each variable:
 ```
 NODE_ENV          = production
 PORT              = 5000
-MONGODB_URI       = mongodb+srv://aksh:...@cluster0.../medintel?...
+MONGODB_URI       = mongodb+srv://inframax07_db_user:oxynlQOnpCvYCVB0@medintel.gjzs80r.mongodb.net/medintel?retryWrites=true&w=majority&appName=medintel
 JWT_SECRET        = (generate: run `node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"`)
 JWT_EXPIRE        = 7d
 FRONTEND_URL      = https://your-app.vercel.app   ← fill after Vercel deploy
