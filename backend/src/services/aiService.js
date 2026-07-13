@@ -38,6 +38,11 @@ const GEMINI_MODEL = process.env.GEMINI_MODEL
 async function callAI(prompt, options = {}) {
   const maxTokens = options.maxTokens || 2048;
   const temperature = options.temperature || 0.2;
+  const systemPrompt = options.systemPrompt || 
+                       'You are a precise medical report analyzer. ' +
+                       'Always respond with valid JSON when asked. ' +
+                       'Never add markdown, backticks, or extra text ' +
+                       'around JSON output.';
   const startTime = Date.now();
 
   // ── 1. TRY GROQ ──────────────────────────────────────
@@ -49,10 +54,7 @@ async function callAI(prompt, options = {}) {
           messages: [
             {
               role: 'system',
-              content: 'You are a precise medical report analyzer. ' +
-                       'Always respond with valid JSON when asked. ' +
-                       'Never add markdown, backticks, or extra text ' +
-                       'around JSON output.'
+              content: systemPrompt
             },
             {
               role: 'user',
@@ -129,6 +131,7 @@ async function callAI(prompt, options = {}) {
     try {
       const model = genAI.getGenerativeModel({
         model: GEMINI_MODEL,
+        systemInstruction: systemPrompt,
         generationConfig: {
           temperature,
           maxOutputTokens: maxTokens
@@ -807,7 +810,8 @@ Return only the translated text, nothing else.`;
   try {
     const translatedText = await callAI(prompt, {
       maxTokens: 2048,
-      temperature: 0.1
+      temperature: 0.1,
+      systemPrompt: 'You are a precise translator. Translate the text directly and accurately. Do NOT output JSON. Respond with the translated text only.'
     });
     return translatedText.trim();
   } catch (error) {

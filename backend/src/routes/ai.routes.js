@@ -161,10 +161,14 @@ RULES FOR YOUR ANSWER:
 9. Write the entire answer in ${reportLanguage}.
 `;
 
-    // Use shared callAI (Groq primary, Gemini fallback)
+    // Use shared callAI (Groq primary, Gemini fallback) with text-focused system prompt
     const answer = (await callAI(prompt, {
       maxTokens: 500,
-      temperature: 0.2
+      temperature: 0.2,
+      systemPrompt: 'You are a helpful and compassionate patient-friendly medical report assistant. ' +
+                    'Respond with a detailed, well-formatted plain text explanation in the requested language. ' +
+                    'Use markdown paragraphs, lists, and bold text for readability. ' +
+                    'Do NOT output JSON. Respond with direct text only.'
     })).trim();
 
     return res.json({
