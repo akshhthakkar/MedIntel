@@ -2,8 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { format } from 'date-fns';
 import { reportsAPI, medicationsAPI } from '../services/api';
-import { 
-  ArrowLeft, Download, FileText, AlertTriangle, CheckCircle, 
+import {
+  ArrowLeft, Download, FileText, AlertTriangle, CheckCircle,
   Activity, Globe, Loader2, MessageCircle, Send, Trash2, Shield, Heart, Image, Sparkles
 } from 'lucide-react';
 import StatusBadge from '../components/ui/StatusBadge';
@@ -13,7 +13,6 @@ import toast from 'react-hot-toast';
 const parseRange = (valStr, rangeStr) => {
   if (!rangeStr || !valStr) return null;
   try {
-    // Sanitize values
     const val = parseFloat(valStr.replace(/[^\d.]/g, ''));
     if (isNaN(val)) return null;
 
@@ -23,38 +22,62 @@ const parseRange = (valStr, rangeStr) => {
       const min = parseFloat(dashMatch[1]);
       const max = parseFloat(dashMatch[2]);
       if (!isNaN(min) && !isNaN(max) && max > min) {
-        // Position min at 25% and max at 75% to show buffer zone
         const rangeWidth = max - min;
         const percent = 25 + ((val - min) / rangeWidth) * 50;
         return { min, max, val, percent: Math.max(5, Math.min(95, percent)), type: 'range' };
       }
     }
 
-    // 2. Less-than limit match (e.g., "< 130" or "<130")
+    // 2. Less-than limit match (e.g., "< 130")
     const ltMatch = rangeStr.match(/^<\s*([\d.]+)$/);
     if (ltMatch) {
       const limit = parseFloat(ltMatch[1]);
       if (!isNaN(limit)) {
-        // Position limit at 75%
         const percent = (val / limit) * 75;
         return { limit, val, percent: Math.max(5, Math.min(95, percent)), type: 'lessThan' };
       }
     }
 
-    // 3. Greater-than limit match (e.g., "> 50" or ">50")
+    // 3. Greater-than limit match (e.g., "> 50")
     const gtMatch = rangeStr.match(/^>\s*([\d.]+)$/);
     if (gtMatch) {
       const limit = parseFloat(gtMatch[1]);
       if (!isNaN(limit)) {
-        // Position limit at 25%
         const percent = val > limit ? 25 + ((val - limit) / limit) * 50 : (val / limit) * 25;
         return { limit, val, percent: Math.max(5, Math.min(95, percent)), type: 'greaterThan' };
       }
     }
   } catch (e) {
-    // Fail silently
+    // fail silently
   }
   return null;
+};
+
+const formatMessage = (content) => {
+  if (!content) return '';
+  const lines = content.split('\n');
+  return lines.map((line, idx) => {
+    const bulletMatch = line.match(/^(\*|-|•)\s*(.*)/);
+    const parseBold = (text) => {
+      const parts = text.split(/\*\*([^*]+)\*\*/g);
+      return parts.map((part, i) => {
+        if (i % 2 === 1) return <strong key={i} className="font-extrabold text-gray-900">{part}</strong>;
+        return part;
+      });
+    };
+    if (bulletMatch) {
+      return (
+        <ul key={idx} className="list-disc pl-4 my-1">
+          <li className="leading-relaxed">{parseBold(bulletMatch[2])}</li>
+        </ul>
+      );
+    }
+    return (
+      <p key={idx} className="my-1.5 min-h-[1em] leading-relaxed">
+        {parseBold(line)}
+      </p>
+    );
+  });
 };
 
 const ReportDetailPage = () => {
@@ -63,7 +86,7 @@ const ReportDetailPage = () => {
   const [loading, setLoading] = useState(true);
   const [retranslating, setRetranslating] = useState(false);
   const [lang, setLang] = useState('');
-  
+
   // Q&A State
   const [question, setQuestion] = useState('');
   const [answerLoading, setAnswerLoading] = useState(false);
@@ -121,7 +144,7 @@ const ReportDetailPage = () => {
     try {
       const res = await reportsAPI.retranslate(id, lang);
       setReport(res.data.data.report);
-      toast.success(`Translated to ${lang}`);
+      toast.success('Translated to ' + lang);
     } catch (err) {
       toast.error('Translation failed');
     } finally {
@@ -153,7 +176,7 @@ const ReportDetailPage = () => {
             }
           }
         }
-        
+
         let freq = m.frequency || 'once_daily';
         const validFreqs = [
           'once_daily', 'twice_daily', 'thrice_daily', 'four_times_daily',
@@ -191,7 +214,7 @@ const ReportDetailPage = () => {
     if (e) e.preventDefault();
     if (!question.trim() || answerLoading) return;
 
-    const userMessage = { role: 'user', content: question };
+    const userMessage = { role: 'user', content: question, time: new Date() };
     const newHistory = [...chatHistory, userMessage];
 
     setChatHistory(newHistory);
@@ -203,19 +226,22 @@ const ReportDetailPage = () => {
         question: userMessage.content,
         reportId: report._id,
         language: lang || 'English',
+        userLanguageHint: userMessage.content,
         history: newHistory.slice(-4)
       });
 
       const assistantMessage = {
         role: 'assistant',
-        content: response.data.data?.answer || response.data.data || 'No answer received.'
+        content: response.data.data?.answer || response.data.data || 'No answer received.',
+        time: new Date()
       };
       setChatHistory(prev => [...prev, assistantMessage]);
 
     } catch (err) {
       const errorMessage = {
         role: 'assistant',
-        content: 'Sorry, I could not answer that. Please try again.'
+        content: 'Sorry, I could not answer that. Please try again.',
+        time: new Date()
       };
       setChatHistory(prev => [...prev, errorMessage]);
     } finally {
@@ -223,6 +249,7 @@ const ReportDetailPage = () => {
     }
   };
 
+  // ── Loading skeleton ──────────────────────────────────────────────
   if (loading) {
     return (
       <div className="max-w-7xl mx-auto space-y-6 pb-20 animate-pulse">
@@ -267,10 +294,19 @@ const ReportDetailPage = () => {
   const normalResults = results.filter(r => r.status?.toLowerCase() === 'normal');
   const borderlineResults = results.filter(r => r.status?.toLowerCase() === 'borderline');
 
+  // Suggestion chips for chatbot (ASCII only to avoid encoding issues)
+  const chatSuggestions = [
+    'What does my summary mean?',
+    'Explain my key findings',
+    'Are there warning signs?',
+    'What should I watch out for?'
+  ];
+
   return (
-    <div className="max-w-7xl mx-auto space-y-6 pb-20 animate-fade-in">
+    <div className="max-w-7xl mx-auto pb-4 animate-fade-in">
+
       {/* Top Header Actions */}
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center justify-between mb-5">
         <Link to="/reports" className="inline-flex items-center text-sm font-bold text-gray-500 hover:text-gray-900 py-1">
           <ArrowLeft className="h-4 w-4 mr-1.5" /> Back to reports
         </Link>
@@ -286,7 +322,7 @@ const ReportDetailPage = () => {
               {languages.map(l => <option key={l} value={l}>{l}</option>)}
             </select>
             {lang !== report.language && (
-              <button 
+              <button
                 onClick={handleRetranslate}
                 disabled={retranslating}
                 className="px-3.5 py-2 bg-primary-50 text-primary-700 text-xs font-extrabold border-l border-gray-200 rounded-r-xl hover:bg-primary-100 transition-colors disabled:opacity-50"
@@ -295,7 +331,7 @@ const ReportDetailPage = () => {
               </button>
             )}
           </div>
-          
+
           {report.fileUrl && (
             <a href={report.fileUrl} target="_blank" rel="noreferrer" className="btn-secondary rounded-xl font-bold text-xs md:text-sm py-2 px-4 shadow-sm hover:bg-gray-50">
               <Download className="h-4 w-4 mr-2" /> Original Document
@@ -304,25 +340,32 @@ const ReportDetailPage = () => {
         </div>
       </div>
 
-      {/* Main Split Grid (Left: findings scrollable, Right: Chat Assistant fixed) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start lg:h-[calc(100vh-130px)] lg:overflow-hidden">
-        
-        {/* Left Column - Report Analysis (Scrollable) */}
-        <div className="lg:col-span-8 lg:h-full lg:overflow-y-auto pr-2 pb-10 scrollbar-thin space-y-6">
-          {/* Header Card */}
+      {/* Main Split Grid */}
+      <div
+        className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start lg:overflow-hidden"
+        style={{ height: 'calc(100vh - 130px)' }}
+      >
+
+        {/* ── LEFT COLUMN: scrollable ── */}
+        <div className="lg:col-span-8 lg:h-full lg:overflow-y-auto pr-1 pb-10 space-y-5">
+
+          {/* Report Header Card */}
           <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
             <div className="bg-gradient-to-r from-primary-600 via-primary-500 to-blue-600 px-6 py-8 text-white">
               <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
                 <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-white/20 text-white backdrop-blur-md">
-                  <FileText className="h-3.5 w-3.5 mr-1.5" /> 
+                  <FileText className="h-3.5 w-3.5 mr-1.5" />
                   <span className="capitalize">{report.reportType?.replace(/_/g, ' ') || 'Medical Report'}</span>
                 </span>
                 <span className="text-xs font-bold bg-white/10 px-3.5 py-1.5 rounded-full backdrop-blur-md">
                   {format(new Date(report.date || Date.now()), 'MMMM d, yyyy')}
                 </span>
-              <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight leading-tight break-words">{report.title ? report.title.replace(/_/g, ' ') : ''}</h1>
+              </div>
+              <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight leading-tight break-words">
+                {report.title ? report.title.replace(/_/g, ' ') : ''}
+              </h1>
             </div>
-            
+
             <div className="p-6 sm:p-8 bg-gray-50/50 border-b border-gray-100">
               <h3 className="text-xs font-extrabold tracking-wider text-gray-400 uppercase mb-2">Clinical Overall Summary</h3>
               <p className="text-gray-700 text-base md:text-lg leading-relaxed font-medium">
@@ -335,7 +378,7 @@ const ReportDetailPage = () => {
           {results.length > 0 && (
             <div className="bg-white rounded-2xl border border-gray-100 p-4 shadow-sm grid grid-cols-4 gap-2 text-center">
               <div>
-                <span className="text-[10px] uppercase font-bold text-gray-400 block">Total Checked</span>
+                <span className="text-[10px] uppercase font-bold text-gray-400 block">Total</span>
                 <span className="text-xl sm:text-2xl font-black text-gray-900 mt-0.5 block">{results.length}</span>
               </div>
               <div>
@@ -353,25 +396,25 @@ const ReportDetailPage = () => {
             </div>
           )}
 
-          {/* Detailed Findings Content */}
-          <div className="space-y-8 pt-4">
+          {/* Diagnostic Breakdown */}
+          <div className="space-y-7 pt-2">
             <h2 className="text-xl sm:text-2xl font-extrabold text-gray-900 flex items-center gap-2">
-              <Activity className="h-5.5 w-5.5 text-primary-500" />
+              <Activity className="h-5 w-5 text-primary-500" />
               <span>Diagnostic Parameter Breakdown</span>
             </h2>
 
-            {/* Standard parameter cards list */}
+            {/* Standard lab results */}
             {!['imaging', 'ecg', 'prescription', 'discharge_summary'].includes(report.reportType || '') && (
               <div className="space-y-6">
                 {abnormalResults.length > 0 && (
                   <div className="space-y-4">
                     <h3 className="text-base font-extrabold text-red-700 flex items-center">
-                      <AlertTriangle className="h-5 w-5 mr-2" /> 
+                      <AlertTriangle className="h-5 w-5 mr-2" />
                       <span>Abnormal Indicators ({abnormalResults.length})</span>
                     </h3>
                     <div className="grid gap-4">
                       {abnormalResults.map((res, idx) => (
-                        <ResultCard key={`abnormal-${idx}`} result={res} theme="red" />
+                        <ResultCard key={'abnormal-' + idx} result={res} theme="red" />
                       ))}
                     </div>
                   </div>
@@ -380,12 +423,12 @@ const ReportDetailPage = () => {
                 {borderlineResults.length > 0 && (
                   <div className="space-y-4">
                     <h3 className="text-base font-extrabold text-amber-700 flex items-center">
-                      <Activity className="h-5 w-5 mr-2" /> 
+                      <Activity className="h-5 w-5 mr-2" />
                       <span>Borderline Indicators ({borderlineResults.length})</span>
                     </h3>
                     <div className="grid gap-4">
                       {borderlineResults.map((res, idx) => (
-                        <ResultCard key={`borderline-${idx}`} result={res} theme="amber" />
+                        <ResultCard key={'borderline-' + idx} result={res} theme="amber" />
                       ))}
                     </div>
                   </div>
@@ -394,12 +437,12 @@ const ReportDetailPage = () => {
                 {normalResults.length > 0 && (
                   <div className="space-y-4">
                     <h3 className="text-base font-extrabold text-emerald-700 flex items-center">
-                      <CheckCircle className="h-5 w-5 mr-2" /> 
+                      <CheckCircle className="h-5 w-5 mr-2" />
                       <span>Normal Indicators ({normalResults.length})</span>
                     </h3>
                     <div className="grid gap-4">
                       {normalResults.map((res, idx) => (
-                        <ResultCard key={`normal-${idx}`} result={res} theme="emerald" />
+                        <ResultCard key={'normal-' + idx} result={res} theme="emerald" />
                       ))}
                     </div>
                   </div>
@@ -435,7 +478,7 @@ const ReportDetailPage = () => {
                   </div>
                 )}
                 {report.extractedData?.impression?.length > 0 && (
-                  <div className="p-4.5 bg-primary-50/20 rounded-xl border border-primary-100">
+                  <div className="p-4 bg-primary-50/20 rounded-xl border border-primary-100">
                     <span className="text-[10px] font-extrabold uppercase tracking-wider text-primary-600 block mb-2">Clinical Impression</span>
                     <ul className="list-disc pl-5 text-gray-800 text-sm space-y-2 font-medium">
                       {report.extractedData.impression.map((imp, i) => <li key={i}>{imp}</li>)}
@@ -443,7 +486,7 @@ const ReportDetailPage = () => {
                   </div>
                 )}
                 {report.extractedData?.abnormalities?.length > 0 && (
-                  <div className="p-4.5 bg-red-50/30 rounded-xl border border-red-100">
+                  <div className="p-4 bg-red-50/30 rounded-xl border border-red-100">
                     <span className="text-[10px] font-extrabold uppercase tracking-wider text-red-600 block mb-2">Noted Pathologies</span>
                     <div className="flex flex-wrap gap-2">
                       {report.extractedData.abnormalities.map((ab, i) => (
@@ -457,28 +500,28 @@ const ReportDetailPage = () => {
               </div>
             )}
 
-            {/* ECG/EKG Layout */}
+            {/* ECG Layout */}
             {report.reportType === 'ecg' && (
               <div className="space-y-6">
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  <div className="bg-white p-4.5 rounded-2xl border border-gray-100 shadow-sm text-center">
+                  <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm text-center">
                     <span className="text-[10px] text-gray-400 block uppercase font-bold">Heart Rate</span>
                     <p className="text-2xl font-black text-gray-900 mt-1">{report.extractedData?.heartRate || 'N/A'} <span className="text-xs font-normal text-gray-400">bpm</span></p>
                   </div>
-                  <div className="bg-white p-4.5 rounded-2xl border border-gray-100 shadow-sm text-center">
+                  <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm text-center">
                     <span className="text-[10px] text-gray-400 block uppercase font-bold">Rhythm</span>
                     <p className="text-base font-black text-gray-900 mt-2 truncate" title={report.extractedData?.rhythm}>{report.extractedData?.rhythm || 'N/A'}</p>
                   </div>
-                  <div className="bg-white p-4.5 rounded-2xl border border-gray-100 shadow-sm text-center">
+                  <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm text-center">
                     <span className="text-[10px] text-gray-400 block uppercase font-bold">PR Interval</span>
                     <p className="text-base font-black text-gray-900 mt-2">{report.extractedData?.prInterval || 'N/A'}</p>
                   </div>
-                  <div className="bg-white p-4.5 rounded-2xl border border-gray-100 shadow-sm text-center">
+                  <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm text-center">
                     <span className="text-[10px] text-gray-400 block uppercase font-bold">QRS Duration</span>
                     <p className="text-base font-black text-gray-900 mt-2">{report.extractedData?.qrsDuration || 'N/A'}</p>
                   </div>
-                  <div className="bg-white p-4.5 rounded-2xl border border-gray-100 shadow-sm text-center col-span-2 md:col-span-1">
-                    <span className="text-[10px] text-gray-400 block uppercase font-bold">QT / QTc Intervals</span>
+                  <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm text-center col-span-2 md:col-span-1">
+                    <span className="text-[10px] text-gray-400 block uppercase font-bold">QT / QTc</span>
                     <p className="text-base font-black text-gray-900 mt-2">
                       {report.extractedData?.qtInterval || 'N/A'} / {report.extractedData?.qtcInterval || 'N/A'}
                     </p>
@@ -507,14 +550,13 @@ const ReportDetailPage = () => {
                     <button
                       onClick={handleImportMedications}
                       disabled={retranslating}
-                      className="px-4.5 py-2 bg-gradient-to-r from-primary-600 to-blue-600 hover:shadow-md text-white rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1.5 self-start"
+                      className="px-4 py-2 bg-gradient-to-r from-primary-600 to-blue-600 hover:shadow-md text-white rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1.5 self-start"
                     >
                       {retranslating ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Import to Medication Tracker'}
                     </button>
                   )}
                 </div>
-                
-                <div className="p-0 overflow-x-auto table-responsive">
+                <div className="overflow-x-auto">
                   {report.extractedData?.medications?.length > 0 ? (
                     <table className="min-w-full divide-y divide-gray-200 text-xs sm:text-sm text-left">
                       <thead className="bg-gray-50 text-gray-500 uppercase font-extrabold text-[10px] tracking-wider border-b border-gray-100">
@@ -553,9 +595,7 @@ const ReportDetailPage = () => {
                     <span className="text-[10px] font-extrabold uppercase tracking-wider text-gray-400 block mb-2.5">Diagnoses</span>
                     <div className="flex flex-wrap gap-2">
                       {report.extractedData.diagnoses.map((d, i) => (
-                        <span key={i} className="px-3.5 py-1.5 bg-blue-50 text-blue-800 text-xs font-bold rounded-lg border border-blue-100 shadow-sm">
-                          {d}
-                        </span>
+                        <span key={i} className="px-3.5 py-1.5 bg-blue-50 text-blue-800 text-xs font-bold rounded-lg border border-blue-100 shadow-sm">{d}</span>
                       ))}
                     </div>
                   </div>
@@ -569,7 +609,7 @@ const ReportDetailPage = () => {
                   </div>
                 )}
                 {report.extractedData?.dischargeMedications?.length > 0 && (
-                  <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden overflow-x-auto table-responsive">
+                  <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden overflow-x-auto">
                     <div className="p-4 bg-gray-50 border-b border-gray-200">
                       <span className="text-[10px] font-extrabold uppercase tracking-wider text-gray-500 block">Discharge Medications</span>
                     </div>
@@ -582,7 +622,7 @@ const ReportDetailPage = () => {
                           <th className="px-6 py-4">Instructions</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-gray-200 bg-white text-gray-900 font-medium font-medium">
+                      <tbody className="divide-y divide-gray-200 bg-white text-gray-900 font-medium">
                         {report.extractedData.dischargeMedications.map((m, idx) => (
                           <tr key={idx} className="hover:bg-gray-50/50">
                             <td className="px-6 py-4 font-bold text-gray-900">{m.name}</td>
@@ -597,7 +637,7 @@ const ReportDetailPage = () => {
                 )}
                 {report.extractedData?.carePlan && (
                   <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-gray-400 block mb-2">Care Instructions & Diet</span>
+                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-gray-400 block mb-2">Care Instructions &amp; Diet</span>
                     <p className="text-gray-700 text-sm leading-relaxed">{report.extractedData.carePlan}</p>
                   </div>
                 )}
@@ -614,65 +654,120 @@ const ReportDetailPage = () => {
           </div>
         </div>
 
-        {/* Right Column - Fixed Height AI Assistant Chat */}
-        <div className="lg:col-span-4 lg:h-full flex flex-col space-y-6 pb-10">
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col h-full lg:h-full min-h-[520px]">
-            {/* Chat Widget Header */}
-            <div className="bg-gray-50 px-5 py-4.5 border-b border-gray-100 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="h-8 w-8 bg-primary-50 rounded-lg flex items-center justify-center border border-primary-100 text-primary-600">
-                  <MessageCircle className="h-4.5 w-4.5" />
+        {/* ── RIGHT COLUMN: AI Chatbot (fixed height, no scroll on outer) ── */}
+        <div className="lg:col-span-4 lg:h-full flex flex-col pb-6">
+          <div
+            className="flex flex-col rounded-2xl overflow-hidden border border-gray-200 shadow-xl"
+            style={{ height: '100%', minHeight: '500px', background: '#f8faff' }}
+          >
+
+            {/* Chat Header */}
+            <div
+              className="flex-shrink-0 px-5 py-4 flex items-center justify-between"
+              style={{ background: 'linear-gradient(135deg, #4f46e5 0%, #6366f1 50%, #3b82f6 100%)' }}
+            >
+              <div className="flex items-center gap-3">
+                <div className="h-9 w-9 rounded-xl flex items-center justify-center shadow-inner" style={{ background: 'rgba(255,255,255,0.2)' }}>
+                  <Sparkles className="h-4 w-4 text-white" />
                 </div>
                 <div>
-                  <h3 className="font-extrabold text-sm text-gray-900 leading-none">AI Clinician Chat</h3>
-                  <span className="text-[10px] text-gray-400 mt-1 block">Contextual health guide</span>
+                  <h3 className="font-extrabold text-sm text-white leading-none tracking-tight">AI Health Assistant</h3>
+                  <span className="text-[10px] text-indigo-200 mt-0.5 block font-medium">
+                    {lang && lang !== 'English' ? 'Responding in ' + lang : 'Ask in any language'}
+                  </span>
                 </div>
               </div>
-              {chatHistory.length > 0 && (
-                <button
-                  onClick={() => setChatHistory([])}
-                  className="text-gray-400 hover:text-gray-600 p-1.5 hover:bg-gray-100 rounded-lg transition-colors"
-                  title="Clear chat history"
-                >
-                  <Trash2 className="h-3.5 w-3.5" />
-                </button>
-              )}
+              <div>
+                {chatHistory.length > 0 && (
+                  <button
+                    onClick={() => setChatHistory([])}
+                    className="text-white/60 hover:text-white p-1.5 rounded-lg transition-colors"
+                    style={{ background: 'transparent' }}
+                    title="Clear chat"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </button>
+                )}
+              </div>
             </div>
 
-            {/* Chat Body */}
-            <div className="flex-1 overflow-y-auto p-5 space-y-4 scrollbar-thin bg-gray-50/30">
+            {/* Chat Body — scrollable */}
+            <div
+              className="flex-1 overflow-y-auto px-4 py-4 space-y-3"
+              style={{ background: '#f0f4ff', minHeight: 0 }}
+            >
               {chatHistory.length === 0 ? (
-                <div className="h-full flex flex-col items-center justify-center text-center p-4">
-                  <Sparkles className="h-8 w-8 text-primary-500 mb-3 animate-pulse" />
-                  <h4 className="font-bold text-gray-800 text-sm">Ask about your results</h4>
-                  <p className="text-xs text-gray-400 mt-1 max-w-[200px] leading-normal">
-                    Get clear answers about abnormal values, precautions, or medical terminology.
+                <div className="h-full flex flex-col items-center justify-center text-center py-8 px-4">
+                  <div className="w-14 h-14 rounded-2xl bg-white border border-indigo-100 flex items-center justify-center mb-4 shadow-sm">
+                    <MessageCircle className="h-6 w-6 text-indigo-500" />
+                  </div>
+                  <h4 className="font-bold text-gray-800 text-sm mb-1">Ask me anything</h4>
+                  <p className="text-xs text-gray-400 max-w-[200px] leading-relaxed">
+                    Chat in Hindi, Gujarati or English. I will reply in your language.
                   </p>
+                  <div className="mt-4 flex flex-wrap justify-center gap-1.5">
+                    {chatSuggestions.map((s, i) => (
+                      <button
+                        key={i}
+                        onClick={() => setQuestion(s)}
+                        className="text-[10px] font-semibold px-2.5 py-1 bg-white border border-indigo-100 text-indigo-600 rounded-full hover:bg-indigo-50 transition-colors shadow-sm whitespace-nowrap"
+                      >
+                        {s}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               ) : (
                 chatHistory.map((msg, i) => (
                   <div
                     key={i}
-                    className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in`}
+                    className={'flex items-end gap-2 animate-fade-in ' + (msg.role === 'user' ? 'justify-end' : 'justify-start')}
                   >
-                    <div className={`
-                      max-w-[85%] px-4 py-2.5 rounded-2xl text-xs leading-relaxed shadow-sm
-                      ${msg.role === 'user'
-                        ? 'bg-primary-600 text-white rounded-br-sm'
-                        : 'bg-white text-gray-800 rounded-bl-sm border border-gray-100'}
-                    `}>
-                      {msg.role === 'user' ? msg.content : formatMessage(msg.content)}
+                    {msg.role !== 'user' && (
+                      <div
+                        className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm mb-0.5"
+                        style={{ background: 'linear-gradient(135deg, #6366f1, #3b82f6)' }}
+                      >
+                        <Sparkles className="h-3.5 w-3.5 text-white" />
+                      </div>
+                    )}
+                    <div className={'max-w-xs flex flex-col ' + (msg.role === 'user' ? 'items-end' : 'items-start')}>
+                      <div
+                        className={'px-3.5 py-2.5 rounded-2xl text-xs leading-relaxed shadow-sm ' + (msg.role === 'user'
+                          ? 'text-white rounded-br-none'
+                          : 'bg-white text-gray-800 rounded-bl-none border border-gray-100')}
+                        style={msg.role === 'user' ? { background: 'linear-gradient(135deg, #4f46e5, #3b82f6)' } : {}}
+                      >
+                        {msg.role === 'user' ? msg.content : formatMessage(msg.content)}
+                      </div>
+                      {msg.time && (
+                        <span className="text-[9px] text-gray-400 mt-1 px-1">
+                          {new Date(msg.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </span>
+                      )}
                     </div>
+                    {msg.role === 'user' && (
+                      <div className="w-7 h-7 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0 shadow-sm mb-0.5">
+                        <span className="text-[10px] font-bold text-gray-600">You</span>
+                      </div>
+                    )}
                   </div>
                 ))
               )}
+
               {answerLoading && (
-                <div className="flex justify-start animate-fade-in">
-                  <div className="bg-white border border-gray-100 px-4 py-3 rounded-2xl rounded-bl-sm shadow-sm">
-                    <div className="flex gap-1.2 items-center">
-                      <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                      <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                      <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                <div className="flex items-end gap-2 justify-start animate-fade-in">
+                  <div
+                    className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm"
+                    style={{ background: 'linear-gradient(135deg, #6366f1, #3b82f6)' }}
+                  >
+                    <Sparkles className="h-3.5 w-3.5 text-white" />
+                  </div>
+                  <div className="bg-white border border-gray-100 px-4 py-3 rounded-2xl rounded-bl-none shadow-sm">
+                    <div className="flex gap-1 items-center">
+                      <span className="w-1.5 h-1.5 bg-indigo-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                      <span className="w-1.5 h-1.5 bg-indigo-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                      <span className="w-1.5 h-1.5 bg-indigo-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                     </div>
                   </div>
                 </div>
@@ -680,44 +775,37 @@ const ReportDetailPage = () => {
               <div ref={chatBottomRef} />
             </div>
 
-            {/* Chat Footer Suggested Questions / Input */}
-            <div className="p-4 bg-white border-t border-gray-100 space-y-3">
-              {chatHistory.length === 0 && (
-                <div className="flex flex-wrap gap-1.5">
-                  {[
-                    'What does my summary mean?',
-                    `What is ${report.aiAnalysis?.concerningValues?.[0] || 'my highest value'}?`,
-                    'Are there warning indicators?'
-                  ].map((suggestion, i) => (
-                    <button
-                      key={i}
-                      onClick={() => setQuestion(suggestion)}
-                      className="text-[10px] font-bold px-2.5 py-1 border border-primary-100 text-primary-600 rounded-full hover:bg-primary-50 transition-colors whitespace-nowrap"
-                    >
-                      {suggestion}
-                    </button>
-                  ))}
-                </div>
-              )}
+            {/* Language hint */}
+            <div className="flex-shrink-0 px-4 py-1.5 bg-indigo-50 border-t border-indigo-100 flex items-center gap-1.5">
+              <Globe className="h-3 w-3 text-indigo-400 flex-shrink-0" />
+              <span className="text-[10px] text-indigo-500 font-medium">
+                Type in Hindi, Gujarati or English - AI will reply in your language.
+              </span>
+            </div>
 
-              <form onSubmit={handleAskQuestion} className="relative flex items-center">
-                <input 
-                  type="text" 
+            {/* Chat Input */}
+            <div className="flex-shrink-0 p-3 bg-white border-t border-gray-100">
+              <form onSubmit={handleAskQuestion} className="flex items-center gap-2">
+                <input
+                  type="text"
                   value={question}
                   onChange={(e) => setQuestion(e.target.value)}
                   disabled={answerLoading}
-                  className="w-full pl-3.5 pr-11 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs focus:ring-2 focus:ring-primary-500/25 focus:border-primary-500 transition-all outline-none text-gray-900 font-medium"
-                  placeholder="Ask a question..."
+                  className="flex-1 px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs focus:outline-none text-gray-900 font-medium placeholder-gray-400"
+                  style={{ transition: 'border-color 0.2s' }}
+                  placeholder="Ask in any language..."
                 />
-                <button 
-                  type="submit" 
+                <button
+                  type="submit"
                   disabled={!question.trim() || answerLoading}
-                  className="absolute right-1.5 p-1.5 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-40 disabled:hover:bg-primary-600 transition-colors"
+                  className="flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center transition-all disabled:opacity-40"
+                  style={{ background: question.trim() ? 'linear-gradient(135deg, #4f46e5, #3b82f6)' : '#d1d5db' }}
                 >
-                  <Send className="h-4 w-4" />
+                  <Send className="h-3.5 w-3.5 text-white" />
                 </button>
               </form>
             </div>
+
           </div>
         </div>
 
@@ -732,17 +820,14 @@ const ResultCard = ({ result, theme }) => {
   const themeClasses = {
     red: {
       border: 'border-l-4 border-red-500',
-      badge: 'critical',
       shadow: 'hover:shadow-red-50/50'
     },
     amber: {
       border: 'border-l-4 border-amber-500',
-      badge: 'borderline',
       shadow: 'hover:shadow-amber-50/50'
     },
     emerald: {
       border: 'border-l-4 border-emerald-500',
-      badge: 'normal',
       shadow: 'hover:shadow-emerald-50/50'
     }
   };
@@ -750,16 +835,16 @@ const ResultCard = ({ result, theme }) => {
   const style = themeClasses[theme] || themeClasses.emerald;
 
   return (
-    <div className={`bg-white rounded-xl p-5 border border-gray-200 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden flex flex-col justify-between ${style.border} ${style.shadow}`}>
+    <div className={'bg-white rounded-xl p-5 border border-gray-200 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden flex flex-col justify-between ' + style.border + ' ' + style.shadow}>
       {result.confidence === 'low' && (
         <div className="absolute top-0 right-0 left-0 bg-yellow-50/80 text-yellow-800 text-[10px] py-1 px-4 border-b border-yellow-100/50 flex items-center gap-1.5 font-bold">
           <AlertTriangle className="h-3.5 w-3.5 text-yellow-600" />
           <span>Extracted value not verified verbatim in document text. Confirm manually.</span>
         </div>
       )}
-      
+
       {/* Parameter Info and Value Row */}
-      <div className={`flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-4 pb-4 border-b border-gray-100 ${result.confidence === 'low' ? 'mt-6' : ''}`}>
+      <div className={'flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-4 pb-4 border-b border-gray-100 ' + (result.confidence === 'low' ? 'mt-6' : '')}>
         <div>
           <h4 className="text-base font-extrabold text-gray-900 mb-1.5">{result.testName}</h4>
           <StatusBadge status={result.status} />
@@ -771,7 +856,7 @@ const ResultCard = ({ result, theme }) => {
           <div className="text-[10px] font-extrabold text-gray-400 mt-1.5 block">Ref: {result.normalRange || 'N/A'}</div>
         </div>
       </div>
-      
+
       {/* Clinician Explanation */}
       <p className="text-gray-600 text-xs md:text-sm leading-relaxed mb-4">
         {result.explanation || 'No clinician explanation generated.'}
@@ -782,30 +867,26 @@ const ResultCard = ({ result, theme }) => {
         <div className="mb-4 bg-gray-50/50 border border-gray-100 p-3 rounded-xl">
           <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider block mb-2.5">Visual Range Indicator</span>
           <div className="h-1.5 w-full bg-gray-200/80 rounded-full relative border border-gray-200/50 mb-1.5">
-            {/* Reference range shading block */}
             {parsed.type === 'range' && (
-              <div className="absolute top-0 bottom-0 left-[25%] right-[25%] bg-emerald-500/10 rounded-sm"></div>
+              <div className="absolute top-0 bottom-0 left-1/4 right-1/4 bg-emerald-500/10 rounded-sm"></div>
             )}
             {parsed.type === 'lessThan' && (
-              <div className="absolute top-0 bottom-0 left-0 right-[25%] bg-emerald-500/10 rounded-sm"></div>
+              <div className="absolute top-0 bottom-0 left-0 right-1/4 bg-emerald-500/10 rounded-sm"></div>
             )}
             {parsed.type === 'greaterThan' && (
-              <div className="absolute top-0 bottom-0 left-[25%] right-0 bg-emerald-500/10 rounded-sm"></div>
+              <div className="absolute top-0 bottom-0 left-1/4 right-0 bg-emerald-500/10 rounded-sm"></div>
             )}
-
-            {/* Marker point */}
-            <div 
-              className={`h-3 w-3 rounded-full absolute -top-0.8 -ml-1.5 shadow-sm border border-white transition-all duration-500
-                ${theme === 'emerald' ? 'bg-emerald-500 shadow-emerald-200' : theme === 'amber' ? 'bg-amber-500 shadow-amber-200' : 'bg-red-500 shadow-red-200'}`}
-              style={{ left: `${parsed.percent}%` }}
+            <div
+              className={'absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full border-2 border-white shadow-md ' + (theme === 'red' ? 'bg-red-500' : theme === 'amber' ? 'bg-amber-500' : 'bg-emerald-500')}
+              style={{ left: parsed.percent + '%', transform: 'translate(-50%, -50%)' }}
             />
           </div>
-          <div className="flex justify-between text-[9px] text-gray-400 font-extrabold">
+          <div className="flex justify-between text-[9px] font-bold text-gray-400">
             {parsed.type === 'range' ? (
               <>
-                <span>Min: {parsed.min}</span>
+                <span>{parsed.min}</span>
                 <span className="text-primary-600">Your Value: {parsed.val}</span>
-                <span>Max: {parsed.max}</span>
+                <span>{parsed.max}</span>
               </>
             ) : parsed.type === 'lessThan' ? (
               <>
@@ -823,8 +904,8 @@ const ResultCard = ({ result, theme }) => {
           </div>
         </div>
       )}
-      
-      {/* Symptoms & Actionable Remedies Row */}
+
+      {/* Symptoms & Remedies */}
       {(result.symptoms?.length > 0 || result.remedies?.length > 0) && (
         <div className="grid sm:grid-cols-2 gap-4 mt-1 text-xs bg-blue-50/20 p-4 rounded-xl border border-blue-50/50">
           {result.symptoms?.length > 0 && (
@@ -847,35 +928,6 @@ const ResultCard = ({ result, theme }) => {
       )}
     </div>
   );
-};
-
-const formatMessage = (content) => {
-  if (!content) return '';
-  const lines = content.split('\n');
-  return lines.map((line, idx) => {
-    const bulletMatch = line.match(/^(\*|-|•)\s*(.*)/);
-    const parseBold = (text) => {
-      const parts = text.split(/\*\*([^*]+)\*\*/g);
-      return parts.map((part, i) => {
-        if (i % 2 === 1) return <strong key={i} className="font-extrabold text-gray-900">{part}</strong>;
-        return part;
-      });
-    };
-
-    if (bulletMatch) {
-      return (
-        <ul key={idx} className="list-disc pl-4 my-1">
-          <li className="leading-relaxed">{parseBold(bulletMatch[2])}</li>
-        </ul>
-      );
-    }
-
-    return (
-      <p key={idx} className="my-1.5 min-h-[1em] leading-relaxed">
-        {parseBold(line)}
-      </p>
-    );
-  });
 };
 
 export default ReportDetailPage;

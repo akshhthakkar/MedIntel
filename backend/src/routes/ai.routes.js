@@ -46,7 +46,7 @@ router.post('/extract-entities', auth, async (req, res) => {
 // POST /api/ai/qa
 router.post('/qa', auth, async (req, res) => {
   try {
-    const { question, reportId, language, history = [] } = req.body;
+    const { question, reportId, language, userLanguageHint, history = [] } = req.body;
 
     // Validate inputs
     if (!question || !question.trim()) {
@@ -76,10 +76,27 @@ router.post('/qa', auth, async (req, res) => {
       });
     }
 
-    // Build the report context string from actual DB data
-    const reportLanguage = language
-      || report.aiAnalysis?.language
-      || 'English';
+    // Detect the language the user typed in, so AI mirrors it
+    const userText = userLanguageHint || question;
+    let detectedLanguage = language || report.aiAnalysis?.language || 'English';
+
+    // Simple heuristic: detect Hindi/Gujarati script characters
+    const hindiRegex = /[\u0900-\u097F]/;
+    const gujaratiRegex = /[\u0A80-\u0AFF]/;
+    const arabicRegex = /[\u0600-\u06FF]/;
+    const chineseRegex = /[\u4E00-\u9FFF]/;
+
+    if (gujaratiRegex.test(userText)) {
+      detectedLanguage = 'Gujarati';
+    } else if (hindiRegex.test(userText)) {
+      detectedLanguage = 'Hindi';
+    } else if (arabicRegex.test(userText)) {
+      detectedLanguage = 'Arabic';
+    } else if (chineseRegex.test(userText)) {
+      detectedLanguage = 'Chinese';
+    }
+    // If message is plain ASCII, honour the selected language param
+    const responseLanguage = detectedLanguage;
 
     const testResultsSummary = (
       report.extractedData?.testResults || []
@@ -119,7 +136,14 @@ You are a patient-friendly medical report assistant.
 The patient is asking a question about their specific medical report.
 Answer ONLY based on the report data provided below.
 Do NOT use general medical knowledge to fill gaps.
-Respond in: ${reportLanguage}
+
+CRITICAL LANGUAGE RULE: The patient typed their question in ${responseLanguage}. 
+You MUST respond entirely in ${responseLanguage}. 
+Mirror the exact language and script the patient used. 
+If the question is in Hindi (Devanagari script), reply in Hindi.
+If the question is in Gujarati, reply in Gujarati.
+If the question is in English, reply in English.
+Never mix languages in your response.
 
 REPORT INFORMATION:
 Report Type: ${report.reportType || 'Medical Report'}
@@ -141,34 +165,26 @@ PATIENT'S CURRENT QUESTION: ${question}
 RULES FOR YOUR ANSWER:
 1. Answer ONLY using the report data shown above.
    Reference specific values and ranges from the report.
-   Example: "Your hemoglobin is 14.2 g/dL which falls within
-   the normal range of 13.5-17.5 g/dL — this is healthy."
-2. If the question asks about a test NOT in the report, say:
-   "This report does not contain a [test name] result.
-   I can only explain tests that were measured in your report."
-3. If the question is completely unrelated to this report
-   (e.g. asking about a different disease, medication advice,
-   or general health questions), say:
-   "I can only answer questions about your uploaded report.
-   That question goes beyond what this report tells us.
-   Please consult your doctor for that."
+2. If the question asks about a test NOT in the report, say so in ${responseLanguage}.
+3. If the question is completely unrelated, say so in ${responseLanguage}.
 4. Never diagnose diseases.
 5. Never recommend specific medications.
 6. Keep the answer under 150 words.
 7. Use simple, calm, non-alarming language.
-8. If the answer requires a doctor's review, say
-   "worth discussing with your doctor" — not "see doctor immediately".
-9. Write the entire answer in ${reportLanguage}.
+8. Write the ENTIRE answer in ${responseLanguage}.
 `;
 
     // Use shared callAI (Groq primary, Gemini fallback) with text-focused system prompt
     const answer = (await callAI(prompt, {
       maxTokens: 500,
       temperature: 0.2,
-      systemPrompt: 'You are a helpful and compassionate patient-friendly medical report assistant. ' +
-                    'Respond with a detailed, well-formatted plain text explanation in the requested language. ' +
-                    'Use markdown paragraphs, lists, and bold text for readability. ' +
-                    'Do NOT output JSON. Respond with direct text only.'
+      systemPrompt: `You are a helpful and compassionate patient-friendly medical report assistant. ` +
+                    `IMPORTANT: The user is communicating in ${responseLanguage}. ` +
+                    `You MUST respond ENTIRELY in ${responseLanguage} — do not switch languages. ` +
+                    `If ${responseLanguage} is Hindi, write in Hindi (Devanagari). ` +
+                    `If ${responseLanguage} is Gujarati, write in Gujarati. ` +
+                    `Use markdown paragraphs, lists, and bold text for readability. ` +
+                    `Do NOT output JSON. Respond with direct text only.`
     })).trim();
 
     return res.json({
