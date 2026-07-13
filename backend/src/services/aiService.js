@@ -506,6 +506,12 @@ async function analyzeSingleChunk(chunkTextContent, category, language, fullOrig
 Your job is to analyze medical reports strictly based on the
 information present in the report text provided to you.
 
+CRITICAL LANGUAGE CONSTRAINT:
+You MUST translate all user-facing explanations, descriptions, summaries, suggestions, parameter explanations, symptoms, remedies, precautions, and key findings into the patient's preferred language (\${language}).
+For example, if the language is Gujarati, write the explanations and summaries in Gujarati script (using Gujarati Unicode characters). If Devanagari/Hindi, write in Devanagari script.
+Do NOT write user-facing values in English unless it is a specific unit (like 'mg/dL') or status (like 'Normal', 'Borderline', 'Abnormal', 'high', 'medium', 'low', 'routine', 'soon', 'urgent').
+Every string field in the JSON output, such as 'explanation', 'overallSummary', 'keyFindings', 'concerningValues', 'positiveIndicators', and 'suggestedPrecautions', MUST be written in the script and vocabulary of \${language}.
+
 ABSOLUTE RULES — NEVER VIOLATE THESE:
 1. Only analyze parameters that are explicitly written in the
    report text. Never invent, assume, or hallucinate any test
