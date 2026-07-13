@@ -3,7 +3,7 @@ const axios = require('axios');
 const sendEmail = async (options) => {
   const brevoApiKey = process.env.BREVO_API_KEY;
   const senderEmail = process.env.BREVO_SENDER_EMAIL || 'inframax07@gmail.com';
-  const senderName = process.env.BREVO_SENDER_NAME || 'MediCare';
+  const senderName = process.env.BREVO_SENDER_NAME || 'MedIntel';
 
   if (!brevoApiKey) {
     console.warn('BREVO_API_KEY not set, skipping email send to:', options.email);

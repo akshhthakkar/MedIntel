@@ -40,39 +40,70 @@ exports.register = async (req, res) => {
       phone
     });
 
-    // Generate verification token
-    const verificationToken = user.getVerificationToken();
-    await user.save({ validateBeforeSave: false });
-
-    // Send verification email (don't await so it doesn't block the response)
-    const verificationUrl = `${req.protocol}://${req.get('host')}/api/auth/verify-email/${verificationToken}`;
-    
-    // In a real app with a frontend deployed separately, we'd use the frontend URL
-    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
-    const frontendVerificationUrl = `${frontendUrl}/verify-email/${verificationToken}`;
-
-    const message = `You are receiving this email because you registered for MedIntel.\n\nPlease click on the following link to verify your email address:\n\n${frontendVerificationUrl}`;
-
-    try {
-      await sendEmail({
-        email: user.email,
-        subject: 'Email Verification - MedIntel',
-        message
-      });
-    } catch (err) {
-      console.error('Email verification send failed:', err);
-      // We don't fail the registration if the email fails, they can request another one later
-    }
+    // No email verification required - user is verified by default
 
     // Send onboarding welcome email
-    const onboardingSubject = 'Welcome to MediCare - Your Health Companion!';
-    const onboardingMessage = `Hello ${user.name},\n\nWelcome to MediCare! We are thrilled to partner with you on your healthcare journey.\n\nHere are a few quick ways to get started:\n1. Upload your first Medical Report: Go to the Upload section to parse a blood test or prescription.\n2. Add your Medications: Set up your pill schedules under the Medications tab for automatic tracking and interaction checks.\n3. Log your Symptoms: Record how you feel daily to identify patterns and trends.\n4. Generate a Doctor Summary: When visiting your provider, print a clinical note summarizing your recent health data from the Timeline tab.\n\nWe keep all your personal health information fully secure and encrypted.\n\nTo your health,\nThe MediCare Team`;
+    const onboardingSubject = 'Welcome to MedIntel - Your Health AI Companion!';
+    const onboardingMessage = `Hello ${user.name},\n\nWelcome to MedIntel! We are thrilled to partner with you on your healthcare journey.\n\nHere are a few quick ways to get started:\n1. Upload your first Medical Report: Go to the Upload section to parse a blood test or prescription.\n2. Add your Medications: Set up your pill schedules under the Medications tab for automatic tracking and interaction checks.\n3. Log your Symptoms: Record how you feel daily to identify patterns and trends.\n4. Generate a Doctor Summary: When visiting your provider, print a clinical note summarizing your recent health data from the Timeline tab.\n\nWe keep all your personal health information fully secure and encrypted.\n\nTo your health,\nThe MedIntel Team`;
+
+    const onboardingHtml = `
+<div style="font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; max-width: 600px; margin: 0 auto; padding: 30px; background-color: #ffffff; border: 1px solid #eef2f6; border-radius: 16px;">
+  <div style="text-align: center; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid #f1f5f9;">
+    <h2 style="color: #1A3C6E; margin: 0; font-size: 26px; font-weight: 800; tracking-tight: -0.02em;">MedIntel</h2>
+    <p style="color: #64748b; font-size: 13px; margin: 4px 0 0 0; font-weight: 500;">Understand Today. Healthier Tomorrow.</p>
+  </div>
+
+  <div style="color: #334155; font-size: 15px; line-height: 1.6; margin-bottom: 24px;">
+    <p style="margin-top: 0;">Hello <strong>${user.name}</strong>,</p>
+    <p>Welcome to <strong>MedIntel</strong>! We are thrilled to partner with you on your healthcare journey. Our platform uses advanced clinical intelligence to translate complex laboratory sheets, radiology reports, and medical documents into plain, patient-friendly insights.</p>
+    
+    <p style="font-weight: 700; color: #1e293b; margin-top: 24px; margin-bottom: 12px;">Here is how to get started with your companion dashboard:</p>
+    
+    <div style="background-color: #f8fafc; border-radius: 12px; padding: 20px; border: 1px solid #f1f5f9; margin-bottom: 24px;">
+      <div style="margin-bottom: 16px;">
+        <span style="font-size: 18px; margin-right: 8px; line-height: 1;">📄</span>
+        <strong style="color: #0f172a; font-size: 14px;">Upload & Analyze Reports</strong>
+        <div style="color: #64748b; font-size: 12px; margin-top: 2px; margin-left: 28px;">Upload blood counts, lipids, urine tests, or radiology scans to generate instant plain-language summaries and abnormal parameter indicators.</div>
+      </div>
+      <div style="margin-bottom: 16px;">
+        <span style="font-size: 18px; margin-right: 8px; line-height: 1;">💊</span>
+        <strong style="color: #0f172a; font-size: 14px;">Track Daily Medications</strong>
+        <div style="color: #64748b; font-size: 12px; margin-top: 2px; margin-left: 28px;">Input your medication schedule. Our clinical rules engine checks for potential interactions and flags overlapping prescriptions.</div>
+      </div>
+      <div style="margin-bottom: 16px;">
+        <span style="font-size: 18px; margin-right: 8px; line-height: 1;">🩺</span>
+        <strong style="color: #0f172a; font-size: 14px;">Log Health Symptoms</strong>
+        <div style="color: #64748b; font-size: 12px; margin-top: 2px; margin-left: 28px;">Keep a daily record of how you feel to identify trends and see correlations in your vitals over time.</div>
+      </div>
+      <div>
+        <span style="font-size: 18px; margin-right: 8px; line-height: 1;">🗒️</span>
+        <strong style="color: #0f172a; font-size: 14px;">Generate Clinical Summaries</strong>
+        <div style="color: #64748b; font-size: 12px; margin-top: 2px; margin-left: 28px;">Export structured summary reports of your symptoms and vitals to share directly with your physician during visits.</div>
+      </div>
+    </div>
+
+    <p style="font-size: 13px; color: #64748b; background-color: #eff6ff; border: 1px solid #dbeafe; border-radius: 8px; padding: 12px; margin-bottom: 24px;">
+      🔒 <strong>Data Security & Privacy:</strong> We hold all your medical records and clinical details strictly encrypted, secure, and private. Your data belongs to you.
+    </p>
+  </div>
+
+  <div style="text-align: center; margin-bottom: 30px;">
+    <a href="https://med-intell.vercel.app/login" style="background-color: #1A3C6E; color: #ffffff; text-decoration: none; padding: 12px 28px; border-radius: 8px; font-weight: 700; font-size: 14px; display: inline-block; box-shadow: 0 4px 6px -1px rgba(26, 60, 110, 0.1), 0 2px 4px -1px rgba(26, 60, 110, 0.06);">Access Your Dashboard</a>
+  </div>
+
+  <div style="text-align: center; font-size: 12px; color: #94a3b8; border-top: 1px solid #f1f5f9; padding-top: 20px;">
+    <p style="margin: 0;">To your health,</p>
+    <p style="font-weight: 700; color: #475569; margin: 4px 0 0 0;">The MedIntel Team</p>
+  </div>
+</div>
+`;
 
     try {
       await sendEmail({
         email: user.email,
         subject: onboardingSubject,
-        message: onboardingMessage
+        message: onboardingMessage,
+        html: onboardingHtml
       });
     } catch (err) {
       console.error('Onboarding email send failed:', err);
@@ -111,7 +142,7 @@ exports.register = async (req, res) => {
 
     res.status(201).json({
       success: true,
-      message: 'Registration successful. Please check your email to verify your account.',
+      message: 'Registration successful. Welcome to MedIntel!',
       data: { user, token }
     });
   } catch (error) {
