@@ -1,0 +1,40 @@
+services:
+  # 1. Express Node.js Backend Service
+  - type: web
+    name: medintel-backend
+    env: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: 5000
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: FRONTEND_URL
+        value: https://med-intell.vercel.app
+      - key: PYTHON_AI_URL
+        value: https://medintel-ai-service.onrender.com
+
+  # 2. FastAPI Python AI Service (Dockerized for Tesseract OCR dependencies)
+  - type: web
+    name: medintel-ai-service
+    env: docker
+    plan: free
+    rootDir: ai-service
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: MONGODB_URI
+        sync: false
