@@ -13,22 +13,35 @@ import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 
-// Lazy Loaded Pages
-const ForgotPasswordPage = React.lazy(() => import('./pages/ForgotPasswordPage'));
-const ResetPasswordPage = React.lazy(() => import('./pages/ResetPasswordPage'));
-const EmailVerificationPage = React.lazy(() => import('./pages/EmailVerificationPage'));
+// Helper for lazy loading retry on dynamic import failure (e.g. after new deploys)
+const lazyWithRetry = (importFn) => {
+  return React.lazy(async () => {
+    try {
+      return await importFn();
+    } catch (error) {
+      console.error("Dynamic import failed. Forcing page refresh...", error);
+      window.location.reload();
+      return new Promise(() => {}); // Return unresolved promise so route transition halts while reloading
+    }
+  });
+};
 
-const DashboardPage = React.lazy(() => import('./pages/DashboardPage'));
-const UploadPage = React.lazy(() => import('./pages/UploadPage'));
-const ReportsListPage = React.lazy(() => import('./pages/ReportsListPage'));
-const ReportDetailPage = React.lazy(() => import('./pages/ReportDetailPage'));
-const ReportComparePage = React.lazy(() => import('./pages/ReportComparePage'));
-const MedicationsPage = React.lazy(() => import('./pages/MedicationsPage'));
-const SymptomsPage = React.lazy(() => import('./pages/SymptomsPage'));
-const TrendsPage = React.lazy(() => import('./pages/TrendsPage'));
-const TimelinePage = React.lazy(() => import('./pages/TimelinePage'));
-const SettingsPage = React.lazy(() => import('./pages/SettingsPage'));
-const NotificationsPage = React.lazy(() => import('./pages/NotificationsPage'));
+// Lazy Loaded Pages
+const ForgotPasswordPage = lazyWithRetry(() => import('./pages/ForgotPasswordPage'));
+const ResetPasswordPage = lazyWithRetry(() => import('./pages/ResetPasswordPage'));
+const EmailVerificationPage = lazyWithRetry(() => import('./pages/EmailVerificationPage'));
+
+const DashboardPage = lazyWithRetry(() => import('./pages/DashboardPage'));
+const UploadPage = lazyWithRetry(() => import('./pages/UploadPage'));
+const ReportsListPage = lazyWithRetry(() => import('./pages/ReportsListPage'));
+const ReportDetailPage = lazyWithRetry(() => import('./pages/ReportDetailPage'));
+const ReportComparePage = lazyWithRetry(() => import('./pages/ReportComparePage'));
+const MedicationsPage = lazyWithRetry(() => import('./pages/MedicationsPage'));
+const SymptomsPage = lazyWithRetry(() => import('./pages/SymptomsPage'));
+const TrendsPage = lazyWithRetry(() => import('./pages/TrendsPage'));
+const TimelinePage = lazyWithRetry(() => import('./pages/TimelinePage'));
+const SettingsPage = lazyWithRetry(() => import('./pages/SettingsPage'));
+const NotificationsPage = lazyWithRetry(() => import('./pages/NotificationsPage'));
 
 const PageFallback = () => (
   <div className="min-h-screen flex items-center justify-center bg-gray-50">
