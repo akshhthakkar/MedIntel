@@ -19,6 +19,9 @@ const aiRoutes = require('./src/routes/ai.routes');
 
 const app = express();
 
+// Trust proxy for Render / load balancers
+app.set('trust proxy', 1);
+
 // Security Middleware
 app.use(helmet());
 app.use(xss());
