@@ -340,53 +340,28 @@ const ReportDetailPage = () => {
         </div>
       </div>
 
-      {/* Custom responsive style override for the reports detail page */}
+      {/* Custom scrollbar styling for the chat window */}
       <style>{`
-        .custom-detail-grid {
-          display: grid;
-          grid-template-columns: 1fr;
-          gap: 1.5rem;
-        }
-        @media (min-width: 1024px) {
-          .custom-detail-grid {
-            grid-template-columns: repeat(12, minmax(0, 1fr));
-            height: calc(100vh - 170px);
-            overflow: hidden;
-          }
-          .custom-scroll-col {
-            height: 100% !important;
-            overflow-y: auto !important;
-            padding-right: 0.5rem;
-          }
-          .custom-chat-col {
-            height: 100% !important;
-          }
-        }
-        /* Sleek custom scrollbars */
-        .custom-scroll-col::-webkit-scrollbar,
         .custom-chat-body::-webkit-scrollbar {
           width: 6px;
         }
-        .custom-scroll-col::-webkit-scrollbar-track,
         .custom-chat-body::-webkit-scrollbar-track {
           background: transparent;
         }
-        .custom-scroll-col::-webkit-scrollbar-thumb,
         .custom-chat-body::-webkit-scrollbar-thumb {
           background: #cbd5e1;
           border-radius: 9999px;
         }
-        .custom-scroll-col::-webkit-scrollbar-thumb:hover,
         .custom-chat-body::-webkit-scrollbar-thumb:hover {
           background: #94a3b8;
         }
       `}</style>
 
       {/* Main Split Grid */}
-      <div className="custom-detail-grid">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 
-        {/* ── LEFT COLUMN: scrollable ── */}
-        <div className="lg:col-span-8 custom-scroll-col space-y-5 pb-10">
+        {/* ── LEFT COLUMN: parameter breakdown ── */}
+        <div className="lg:col-span-8 space-y-5 pb-10">
 
           {/* Report Header Card */}
           <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
@@ -691,11 +666,11 @@ const ReportDetailPage = () => {
               </div>
             )}
           </div>
-        </div>        {/* ── RIGHT COLUMN: AI Chatbot (themed to match project branding) ── */}
-        <div className="lg:col-span-4 custom-chat-col flex flex-col pb-6">
+        </div>        {/* ── RIGHT COLUMN: AI Chatbot (themed to match project branding, sticky on desktop) ── */}
+        <div className="lg:col-span-4 lg:sticky lg:top-24 flex flex-col pb-6">
           <div
             className="flex flex-col rounded-2xl overflow-hidden border border-gray-200 shadow-xl"
-            style={{ height: '100%', minHeight: '500px', background: '#f8faff' }}
+            style={{ height: '620px', background: '#f8faff' }}
           >
             {/* Chat Header */}
             <div
