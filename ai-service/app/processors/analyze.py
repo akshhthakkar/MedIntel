@@ -375,6 +375,12 @@ async def analyze_report(raw_text: str, language: str = 'English', file_bytes: O
     category_instructions = get_category_instructions(category)
     few_shot_example = FEW_SHOT_EXAMPLES.get(category, FEW_SHOT_EXAMPLES['blood_test'])
 
+    imaging_schema = '"bodyRegion": "string",\n  "findings": ["string"],\n  "impression": ["string"],\n  "recommendations": ["string"],\n  "abnormalities": ["string"],' if category == 'imaging' else ''
+    ecg_schema = '"heartRate": "string",\n  "rhythm": "string",\n  "prInterval": "string",\n  "qrsDuration": "string",\n  "qtInterval": "string",\n  "qtcInterval": "string",\n  "findings": ["string"],\n  "abnormalities": ["string"],' if category == 'ecg' else ''
+    prescription_schema = '"medications": [\n    {\n      "name": "string",\n      "dosage": "string",\n      "frequency": "once_daily|twice_daily|thrice_daily|four_times_daily|every_6_hours|every_8_hours|every_12_hours|as_needed|weekly",\n      "duration": "string",\n      "instructions": "string"\n    }\n  ],\n  "instructions": "string",\n  "diagnoses": ["string"],' if category == 'prescription' else ''
+    discharge_schema = '"diagnoses": ["string"],\n  "procedures": ["string"],\n  "dischargeMedications": [\n    {\n      "name": "string",\n      "dosage": "string",\n      "frequency": "string",\n      "duration": "string",\n      "instructions": "string"\n    }\n  ],\n  "followUpInstructions": ["string"],\n  "carePlan": "string",' if category == 'discharge_summary' else ''
+    test_schema = '"testResults": [\n    {\n      "testName": "string",\n      "value": "string",\n      "unit": "string",\n      "normalRange": "string",\n      "status": "Normal|Borderline|Abnormal",\n      "explanation": "string",\n      "symptoms": ["string"],\n      "remedies": ["string"],\n      "confidence": "high|medium|low"\n    }\n  ],' if category in ['blood_test', 'urine_test', 'other'] else ''
+
     prompt = f"""You are a clinical medical report analyzer and patient educator.
 Your job is to analyze medical reports strictly based on the
 information present in the report text provided to you.
@@ -429,11 +435,11 @@ TARGET SCHEMA JSON FORMAT:
 {{
   "reportType": "{category}",
   "language": "{language}",
-  {'"bodyRegion": "string",\\n  "findings": ["string"],\\n  "impression": ["string"],\\n  "recommendations": ["string"],\\n  "abnormalities": ["string"],' if category == 'imaging' else ''}
-  {'"heartRate": "string",\\n  "rhythm": "string",\\n  "prInterval": "string",\\n  "qrsDuration": "string",\\n  "qtInterval": "string",\\n  "qtcInterval": "string",\\n  "findings": ["string"],\\n  "abnormalities": ["string"],' if category == 'ecg' else ''}
-  {'"medications": [\\n    {\\n      "name": "string",\\n      "dosage": "string",\\n      "frequency": "once_daily|twice_daily|thrice_daily|four_times_daily|every_6_hours|every_8_hours|every_12_hours|as_needed|weekly",\\n      "duration": "string",\\n      "instructions": "string"\\n    }\\n  ],\\n  "instructions": "string",\\n  "diagnoses": ["string"],' if category == 'prescription' else ''}
-  {'"diagnoses": ["string"],\\n  "procedures": ["string"],\\n  "dischargeMedications": [\\n    {\\n      "name": "string",\\n      "dosage": "string",\\n      "frequency": "string",\\n      "duration": "string",\\n      "instructions": "string"\\n    }\\n  ],\\n  "followUpInstructions": ["string"],\\n  "carePlan": "string",' if category == 'discharge_summary' else ''}
-  {'"testResults": [\\n    {\\n      "testName": "string",\\n      "value": "string",\\n      "unit": "string",\\n      "normalRange": "string",\\n      "status": "Normal|Borderline|Abnormal",\\n      "explanation": "string",\\n      "symptoms": ["string"],\\n      "remedies": ["string"],\\n      "confidence": "high|medium|low"\\n    }\\n  ],' if category in ['blood_test', 'urine_test', 'other'] else ''}
+  {imaging_schema}
+  {ecg_schema}
+  {prescription_schema}
+  {discharge_schema}
+  {test_schema}
   "keyFindings": ["string"],
   "concerningValues": ["string"],
   "positiveIndicators": ["string"],
